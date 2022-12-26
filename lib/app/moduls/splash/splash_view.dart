@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bill_hub/app/moduls/onboarding_view/boarding_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../shared/components/component.dart';
@@ -38,7 +39,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   _goNext() {
-    navigateAndFinish(context, LoginView());
+    navigateAndFinish(context, OnBoardingScreen());
   }
 
   @override

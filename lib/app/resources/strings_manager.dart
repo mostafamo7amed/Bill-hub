@@ -1,13 +1,17 @@
 class AppStrings{
   static String noRouteFound = "No Route found";
-  static String onBoardingTitle1 = "Title1";
-  static String onBoardingTitle2 = "Title2";
-  static String onBoardingTitle3 = "Title3";
-  static String onBoardingTitle4 = "Title4";
-  static String onBoardingSubTitle1 = "SubTitle1";
-  static String onBoardingSubTitle2 = "SubTitle2";
-  static String onBoardingSubTitle3 = "SubTitle3";
-  static String onBoardingSubTitle4 = "SubTitle4";
-  static String skip = "Skip";
-
+  static String onBoardingTitle1 = "قم بدفع فواتيرك بأمان";
+  static String onBoardingTitle2 = "إنشأ فواتيرك و ارسلها لعملائك";
+  static String onBoardingTitle3 = "تابع مبيعاتك بكل سهولة";
+  static String skip = "تخطي";
+  static String welcome = "مرحباً بعودتك";
+  static String welcomeVisitor = "مرحباً بك";
+  static String welcomeSign = "سجل دخولك معنا لتتمتع بمزيد من مزايا التطبيق\n وأدفع فواتيرك بأمان";
+  static String enterEmail = "أدخل بريدك الإلكتروني";
+  static String enterPassword = "أدخل كلمة المرور";
+  static String signIn ='تسجيل الدخول';
+  static String signVisitor ='سجيل كضيف';
+  static String createAccount ='إنشاء حساب';
+  static String forgetPassword ='نسيت كلة المرور؟';
+  static String enterBillNumber ='أدخل رقم الفاتورة';
 }
