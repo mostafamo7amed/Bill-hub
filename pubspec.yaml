@@ -55,6 +55,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   percent_indicator: ^4.2.2
   smooth_page_indicator: ^1.0.0+2
+  syncfusion_flutter_charts: ^20.4.41
 
 
 dev_dependencies:

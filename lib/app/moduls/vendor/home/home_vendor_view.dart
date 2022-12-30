@@ -1,19 +1,19 @@
-import 'package:bill_hub/app/moduls/admin/manage_users/manage_users.dart';
-import 'package:bill_hub/app/resources/color_manager.dart';
-import 'package:bill_hub/app/resources/strings_manager.dart';
-import 'package:bill_hub/app/resources/styles_manager.dart';
+import 'package:bill_hub/app/moduls/vendor/product/product.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../shared/components/component.dart';
 import '../../../../styles/icons_broken.dart';
 import '../../../resources/assets_manager.dart';
+import '../../../resources/color_manager.dart';
 import '../../../resources/font_manager.dart';
+import '../../../resources/strings_manager.dart';
+import '../../../resources/styles_manager.dart';
 import '../../login/login_view.dart';
-import '../complaint/complaint_view.dart';
-import '../manage_invoice/manage_invoice.dart';
+import '../analysis/analysis.dart';
+import '../chat/chat_view.dart';
+import '../complaint/complaint.dart';
 
-class AdminHomeView extends StatelessWidget {
-  const AdminHomeView({Key? key}) : super(key: key);
+class HomeVendorView extends StatelessWidget {
+  const HomeVendorView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class AdminHomeView extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Image.asset(ImageAssets.bill,width: 40,height: 40,),
+                      child: Icon(IconBroken.Document,size: 32,color: ColorManager.primary,),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -102,7 +102,7 @@ class AdminHomeView extends StatelessWidget {
                                 color: ColorManager.black, fontSize: 18),
                           ),
                           Text(
-                            "التحقق من الفواتير",
+                            "أنشاء فاتورة جديدة",
                             style: getSemiBoldStyle(
                                 color: ColorManager.gray, fontSize: 16),
                           ),
@@ -113,7 +113,7 @@ class AdminHomeView extends StatelessWidget {
                   ],
                 )),
             onTap: () {
-              navigateTo(context, ManageAdminInvoice());
+              //navigateTo(context, ManageAdminInvoice());
             },
           ),
           InkWell(
@@ -124,8 +124,8 @@ class AdminHomeView extends StatelessWidget {
                 child: Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child:Image.asset(ImageAssets.manage,width: 40,height: 40,),
+                      padding: EdgeInsets.all(10.0),
+                      child:Icon(IconBroken.Buy,size: 32,color: ColorManager.primary,),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -137,12 +137,12 @@ class AdminHomeView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "البائعين",
+                            "المنتجات",
                             style: getSemiBoldStyle(
                                 color: ColorManager.black, fontSize: 18),
                           ),
                           Text(
-                            "قبول او رفض البائع",
+                            "قم بإضافة منتج جديد",
                             style: getSemiBoldStyle(
                                 color: ColorManager.gray, fontSize: 16),
                           ),
@@ -153,7 +153,7 @@ class AdminHomeView extends StatelessWidget {
                   ],
                 )),
             onTap: () {
-              navigateTo(context, ManageUsers());
+              navigateTo(context, ProductView());
             },
           ),
           InkWell(
@@ -165,7 +165,87 @@ class AdminHomeView extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Image.asset(ImageAssets.complaint,width: 40,height: 40,),
+                      child: Icon(IconBroken.Chat,size: 32,color: ColorManager.primary,),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(IconBroken.Arrow___Left_2,color: ColorManager.primary,),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "المحادثات",
+                            style: getSemiBoldStyle(
+                                color: ColorManager.black, fontSize: 18),
+                          ),
+                          Text(
+                            "تواصل مع العملاء بسهولة",
+                            style: getSemiBoldStyle(
+                                color: ColorManager.gray, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
+                )),
+            onTap: () {
+              navigateTo(context,  ChatView());
+            },
+          ),
+          InkWell(
+            child: Card(
+                margin: const EdgeInsets.all(5),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                elevation: 3,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(IconBroken.Chart,size: 32,color: ColorManager.primary,),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(IconBroken.Arrow___Left_2,color: ColorManager.primary,),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "تحليل المبيعات",
+                            style: getSemiBoldStyle(
+                                color: ColorManager.black, fontSize: 18),
+                          ),
+                          Text(
+                            "بيانات مبيعاتك عن كل شهر",
+                            style: getSemiBoldStyle(
+                                color: ColorManager.gray, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
+                )),
+            onTap: () {
+              navigateTo(context,  AnalysisView());
+            },
+          ),
+          InkWell(
+            child: Card(
+                margin: const EdgeInsets.all(5),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                elevation: 3,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(IconBroken.Calling,size: 32,color: ColorManager.primary,),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -182,7 +262,7 @@ class AdminHomeView extends StatelessWidget {
                                 color: ColorManager.black, fontSize: 18),
                           ),
                           Text(
-                            "إدارة ومتابعة شكاوي العملاء",
+                            "أرسال شكوي للدعم الفني",
                             style: getSemiBoldStyle(
                                 color: ColorManager.gray, fontSize: 16),
                           ),
@@ -193,11 +273,10 @@ class AdminHomeView extends StatelessWidget {
                   ],
                 )),
             onTap: () {
-              navigateTo(context,  ComplaintAdminView());
+              navigateTo(context,  VendorComplaint());
             },
           ),
         ],
       ),
-    );
-  }
+    );  }
 }

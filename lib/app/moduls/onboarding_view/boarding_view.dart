@@ -9,8 +9,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../shared/components/component.dart';
 import '../../../shared/network/local/cache_helper.dart';
 
-
-class OnBoardingModel{
+class OnBoardingModel {
   final String image;
   final String title;
 
@@ -19,6 +18,7 @@ class OnBoardingModel{
     required this.title,
   });
 }
+
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
 
@@ -27,13 +27,21 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
-
   bool isLast = false;
-  var boardingController =PageController();
-  List<OnBoardingModel> boarding =[
-    OnBoardingModel(image: ImageAssets.splashLogo, title: AppStrings.onBoardingTitle1,),
-    OnBoardingModel(image: ImageAssets.splashLogo, title: AppStrings.onBoardingTitle2,),
-    OnBoardingModel(image: ImageAssets.splashLogo, title: AppStrings.onBoardingTitle3,),
+  var boardingController = PageController();
+  List<OnBoardingModel> boarding = [
+    OnBoardingModel(
+      image: ImageAssets.splashLogo,
+      title: AppStrings.onBoardingTitle1,
+    ),
+    OnBoardingModel(
+      image: ImageAssets.splashLogo,
+      title: AppStrings.onBoardingTitle2,
+    ),
+    OnBoardingModel(
+      image: ImageAssets.splashLogo,
+      title: AppStrings.onBoardingTitle3,
+    ),
   ];
 
   @override
@@ -44,9 +52,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         actions: [
-          TextButton(onPressed: () {
-            submit();
-          }, child: Text(AppStrings.skip,style: getSemiBoldStyle(color: ColorManager.primary,fontSize: 16),))
+          TextButton(
+              onPressed: () {
+                submit();
+              },
+              child: Text(
+                AppStrings.skip,
+                style:
+                    getSemiBoldStyle(color: ColorManager.primary, fontSize: 16),
+              ))
         ],
       ),
       body: Padding(
@@ -56,23 +70,26 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             Expanded(
               child: PageView.builder(
                 onPageChanged: (index) {
-                  if(index == boarding.length-1){
+                  if (index == boarding.length - 1) {
                     setState(() {
                       isLast = true;
                     });
-                  }else{
+                  } else {
                     setState(() {
                       isLast = false;
                     });
                   }
                 },
                 controller: boardingController,
-                physics:const BouncingScrollPhysics(),
-                itemBuilder: (context, index) => defaultOnBoardingItem(boarding[index]),
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) =>
+                    defaultOnBoardingItem(boarding[index]),
                 itemCount: boarding.length,
               ),
             ),
-            const SizedBox(height: 15,),
+            const SizedBox(
+              height: 15,
+            ),
             Row(
               children: [
                 SmoothPageIndicator(
@@ -83,20 +100,20 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       dotWidth: 10,
                       spacing: 5.0,
                       activeDotColor: ColorManager.primary,
-
                     ),
                     controller: boardingController,
                     count: boarding.length),
                 const Spacer(),
                 FloatingActionButton(
                   onPressed: () {
-                    if(isLast){
+                    if (isLast) {
                       submit();
-                    }else{
+                    } else {
                       boardingController.nextPage(
                           duration: const Duration(
                             milliseconds: 750,
-                          ), curve: Curves.fastLinearToSlowEaseIn);
+                          ),
+                          curve: Curves.fastLinearToSlowEaseIn);
                     }
                   },
                   child: const Icon(Icons.arrow_forward_ios),
@@ -109,24 +126,35 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     );
   }
 
-
-
   Widget defaultOnBoardingItem(OnBoardingModel list) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children:  [
-      Expanded(
-        child: Image(image: AssetImage(list.image),
-        ),
-      ),
-      const SizedBox(height: 20,),
-      Text(list.title,
-        style: getSemiBoldStyle(color: ColorManager.darkGray,fontSize: 18),
-      ),
-      const SizedBox(height: 15,),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+              child: Text(
+            'BillHub',
+            textAlign: TextAlign.center,
+            style: getBoldStyle(color: ColorManager.primary, fontSize: 26),
+          )),
+          Expanded(
+            child: Image(
+              image: AssetImage(list.image),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            list.title,
+            style: getSemiBoldStyle(color: ColorManager.darkGray, fontSize: 18),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+        ],
+      );
 
-  void submit(){
-      navigateAndFinish(context, LoginView());
+  void submit() {
+    navigateAndFinish(context, LoginView());
   }
 }

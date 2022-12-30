@@ -1,4 +1,5 @@
 import 'package:bill_hub/app/moduls/admin/home/home_admin.dart';
+import 'package:bill_hub/app/moduls/vendor/home/home_vendor_view.dart';
 import 'package:bill_hub/app/resources/strings_manager.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +117,7 @@ class LoginView extends StatelessWidget {
                         ),
                         onPressed: () {
                           //TODO login press
-                          navigateAndFinish(context, AdminHomeView());
+                          navigateAndFinish(context, HomeVendorView());
                         },
                       ),
                     ),
