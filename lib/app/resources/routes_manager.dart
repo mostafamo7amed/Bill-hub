@@ -2,7 +2,7 @@
 import 'package:bill_hub/app/resources/strings_manager.dart';
 import 'package:flutter/material.dart';
 
-import '../moduls/splash/splash_view.dart';
+import '../modules/splash/splash_view.dart';
 
 class Routes {
   static const String splashRoute = "/";

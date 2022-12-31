@@ -1,4 +1,4 @@
-import 'package:bill_hub/app/moduls/admin/manage_users/manage_users.dart';
+import 'package:bill_hub/app/modules/admin/manage_users/manage_users.dart';
 import 'package:bill_hub/app/resources/color_manager.dart';
 import 'package:bill_hub/app/resources/strings_manager.dart';
 import 'package:bill_hub/app/resources/styles_manager.dart';
@@ -85,7 +85,7 @@ class AdminHomeView extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Image.asset(ImageAssets.bill,width: 40,height: 40,),
+                      child: Icon(IconBroken.Document,size: 32,color: ColorManager.primary,),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -125,7 +125,7 @@ class AdminHomeView extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child:Image.asset(ImageAssets.manage,width: 40,height: 40,),
+                      child: Icon(IconBroken.User1,size: 32,color: ColorManager.primary,),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -165,7 +165,7 @@ class AdminHomeView extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Image.asset(ImageAssets.complaint,width: 40,height: 40,),
+                      child: Icon(IconBroken.Calling,size: 32,color: ColorManager.primary,),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),

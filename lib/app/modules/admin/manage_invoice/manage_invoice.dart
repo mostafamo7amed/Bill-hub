@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../styles/icons_broken.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
@@ -146,7 +147,7 @@ class _ManageAdminInvoiceState extends State<ManageAdminInvoice> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Image.asset(ImageAssets.bill,width: 40,height: 40,),
+                  child: Icon(IconBroken.Document,size: 32,color: ColorManager.primary,),
                 ),
                 Expanded(
                   child: Padding(

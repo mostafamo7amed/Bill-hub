@@ -1,5 +1,5 @@
-import 'package:bill_hub/app/moduls/admin/home/home_admin.dart';
-import 'package:bill_hub/app/moduls/vendor/home/home_vendor_view.dart';
+import 'package:bill_hub/app/modules/admin/home/home_admin.dart';
+import 'package:bill_hub/app/modules/vendor/home/home_vendor_view.dart';
 import 'package:bill_hub/app/resources/strings_manager.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +7,7 @@ import '../../resources/assets_manager.dart';
 import '../../../shared/components/component.dart';
 import '../../resources/color_manager.dart';
 import '../../resources/styles_manager.dart';
+import '../buyer/home/home_buyer_view.dart';
 import '../visitor/visitor_view.dart';
 
 class LoginView extends StatelessWidget {
@@ -117,7 +118,7 @@ class LoginView extends StatelessWidget {
                         ),
                         onPressed: () {
                           //TODO login press
-                          navigateAndFinish(context, HomeVendorView());
+                          navigateAndFinish(context, HomeBuyerView());
                         },
                       ),
                     ),

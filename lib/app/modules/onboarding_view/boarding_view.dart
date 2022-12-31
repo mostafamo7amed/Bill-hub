@@ -1,4 +1,4 @@
-import 'package:bill_hub/app/moduls/login/login_view.dart';
+import 'package:bill_hub/app/modules/login/login_view.dart';
 import 'package:bill_hub/app/resources/assets_manager.dart';
 import 'package:bill_hub/app/resources/color_manager.dart';
 import 'package:bill_hub/app/resources/strings_manager.dart';

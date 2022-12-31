@@ -1,4 +1,4 @@
-import 'package:bill_hub/app/moduls/visitor/payment.dart';
+import 'package:bill_hub/app/modules/visitor/payment.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/components/component.dart';

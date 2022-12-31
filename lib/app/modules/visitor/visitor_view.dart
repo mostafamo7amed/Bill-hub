@@ -1,4 +1,4 @@
-import 'package:bill_hub/app/moduls/visitor/visitor_pay_view.dart';
+import 'package:bill_hub/app/modules/visitor/visitor_pay_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../shared/components/component.dart';

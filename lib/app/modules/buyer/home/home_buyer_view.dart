@@ -1,5 +1,5 @@
-import 'package:bill_hub/app/moduls/vendor/product/product.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../shared/components/component.dart';
 import '../../../../styles/icons_broken.dart';
 import '../../../resources/assets_manager.dart';
@@ -8,12 +8,12 @@ import '../../../resources/font_manager.dart';
 import '../../../resources/strings_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../login/login_view.dart';
-import '../analysis/analysis.dart';
 import '../chat/chat_view.dart';
 import '../complaint/complaint.dart';
+import '../invoice/invoice_buyer_view.dart';
 
-class HomeVendorView extends StatelessWidget {
-  const HomeVendorView({Key? key}) : super(key: key);
+class HomeBuyerView extends StatelessWidget {
+  const HomeBuyerView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +102,7 @@ class HomeVendorView extends StatelessWidget {
                                 color: ColorManager.black, fontSize: 18),
                           ),
                           Text(
-                            "أنشاء فاتورة جديدة",
+                            "تابع فواتيرك",
                             style: getSemiBoldStyle(
                                 color: ColorManager.gray, fontSize: 16),
                           ),
@@ -113,47 +113,7 @@ class HomeVendorView extends StatelessWidget {
                   ],
                 )),
             onTap: () {
-              //navigateTo(context, ManageAdminInvoice());
-            },
-          ),
-          InkWell(
-            child: Card(
-                margin: const EdgeInsets.all(5),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                elevation: 3,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child:Icon(IconBroken.Buy,size: 32,color: ColorManager.primary,),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(IconBroken.Arrow___Left_2,color: ColorManager.primary,),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "المنتجات",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.black, fontSize: 18),
-                          ),
-                          Text(
-                            "قم بإضافة منتج جديد",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.gray, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                  ],
-                )),
-            onTap: () {
-              navigateTo(context, ProductView());
+              navigateTo(context, InvoiceBuyerView());
             },
           ),
           InkWell(
@@ -193,47 +153,7 @@ class HomeVendorView extends StatelessWidget {
                   ],
                 )),
             onTap: () {
-              navigateTo(context,  ChatView());
-            },
-          ),
-          InkWell(
-            child: Card(
-                margin: const EdgeInsets.all(5),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                elevation: 3,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(IconBroken.Chart,size: 32,color: ColorManager.primary,),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(IconBroken.Arrow___Left_2,color: ColorManager.primary,),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "تحليل المبيعات",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.black, fontSize: 18),
-                          ),
-                          Text(
-                            "بيانات مبيعاتك عن كل شهر",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.gray, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                  ],
-                )),
-            onTap: () {
-              navigateTo(context,  AnalysisView());
+              navigateTo(context,  ChatBuyerView());
             },
           ),
           InkWell(
@@ -273,10 +193,12 @@ class HomeVendorView extends StatelessWidget {
                   ],
                 )),
             onTap: () {
-              navigateTo(context,  VendorComplaint());
+              navigateTo(context,  BuyerComplaint());
             },
           ),
         ],
       ),
-    );  }
+    );
+
+  }
 }

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bill_hub/app/moduls/onboarding_view/boarding_view.dart';
+import 'package:bill_hub/app/modules/onboarding_view/boarding_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../shared/components/component.dart';

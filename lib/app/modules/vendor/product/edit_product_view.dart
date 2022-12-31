@@ -41,7 +41,7 @@ class AddProductView extends StatelessWidget {
                     context: context),
                 SizedBox(height: 10,),
                 defaultFormField(
-                    controller: namePrController,
+                    controller: pricePrController,
                     label: ' سعر المنتج ',
                     validate: (value) {
                       if(value.isEmpty){
@@ -53,7 +53,7 @@ class AddProductView extends StatelessWidget {
                     context: context),
                 SizedBox(height: 10,),
                 defaultFormField(
-                    controller: namePrController,
+                    controller: amountPrController,
                     label: ' الكمية المتاحة ',
                     validate: (value) {
                       if(value.isEmpty){
