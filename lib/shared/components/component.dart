@@ -21,7 +21,7 @@ Widget defaultFormField({
   bool isPassword = false,
 }) =>
     SizedBox(
-      height: 50,
+      height: 70,
       child: TextFormField(
         controller: controller,
         obscureText: isPassword,
@@ -43,7 +43,9 @@ Widget defaultFormField({
                   color: ColorManager.primary,
                 )
               : null,
-          border: const OutlineInputBorder(),
+          border: const OutlineInputBorder(
+
+          ),
           labelStyle: getRegularStyle(color: ColorManager.black, fontSize: 16),
           prefixIconColor: ColorManager.primary,
         ),

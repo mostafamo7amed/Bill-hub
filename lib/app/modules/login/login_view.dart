@@ -8,6 +8,7 @@ import '../../../shared/components/component.dart';
 import '../../resources/color_manager.dart';
 import '../../resources/styles_manager.dart';
 import '../buyer/home/home_buyer_view.dart';
+import '../register/register_view.dart';
 import '../visitor/visitor_view.dart';
 
 class LoginView extends StatelessWidget {
@@ -53,9 +54,6 @@ class LoginView extends StatelessWidget {
                         return null;
                       },
                       type: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(
-                      height: 10.0,
                     ),
                     defaultFormField(
                         context: context,
@@ -118,7 +116,7 @@ class LoginView extends StatelessWidget {
                         ),
                         onPressed: () {
                           //TODO login press
-                          navigateAndFinish(context, HomeBuyerView());
+                          navigateAndFinish(context, AdminHomeView());
                         },
                       ),
                     ),
@@ -131,7 +129,7 @@ class LoginView extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            //navigateTo(context, RegisterView());
+                            navigateTo(context, RegisterView());
                           },
                           child: Text(
                             AppStrings.createAccount,

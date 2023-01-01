@@ -14,4 +14,7 @@ class AppStrings{
   static String createAccount ='إنشاء حساب';
   static String forgetPassword ='نسيت كلة المرور؟';
   static String enterBillNumber ='أدخل رقم الفاتورة';
+  static String reEnterPassword ='تأكيد كلمة المرور';
+  static String enterName ='أدخل الاسم';
+  static String enterPhone ='أدخل رقم الهاتف';
 }

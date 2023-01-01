@@ -60,7 +60,8 @@ ThemeData getApplicationTheme() {
     ),
 
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: const EdgeInsets.all(AppPadding.p4),
+      border: OutlineInputBorder(),
+      contentPadding: const EdgeInsets.all(AppPadding.p10),
       hintStyle: getRegularStyle(
           color: ColorManager.gray, fontSize: FontSizeManager.s14),
       labelStyle: getRegularStyle(
