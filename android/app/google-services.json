@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "413782217273",
+    "project_id": "bill-hub",
+    "storage_bucket": "bill-hub.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413782217273:android:1165157f381a8e0cbef3e8",
+        "android_client_info": {
+          "package_name": "com.example.bill_hub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413782217273-b76o016q54o1npajtiv0td8etp4chphb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_h271oH8VeokFEaTXMUWDrC1VEzPPjm8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "413782217273-b76o016q54o1npajtiv0td8etp4chphb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

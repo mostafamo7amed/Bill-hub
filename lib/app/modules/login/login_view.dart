@@ -25,6 +25,7 @@ class LoginView extends StatelessWidget {
           padding: const EdgeInsets.all(20.0),
           child: Center(
             child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: Form(
                 key: formKey,
                 child: Column(

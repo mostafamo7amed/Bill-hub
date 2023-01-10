@@ -10,6 +10,7 @@ import '../../../resources/styles_manager.dart';
 import '../../login/login_view.dart';
 import '../chat/chat_view.dart';
 import '../complaint/complaint.dart';
+import '../edit_profile/edit_profile.dart';
 import '../invoice/invoice_buyer_view.dart';
 
 class HomeBuyerView extends StatelessWidget {
@@ -46,13 +47,18 @@ class HomeBuyerView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 14.0, right: 14),
               child: Row(children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                InkWell(
+                  onTap: () {
+                    navigateTo(context, EditBuyerAccount());
+                  },
                   child: CircleAvatar(
-                    radius: 27,
-                    backgroundImage: AssetImage(
-                      ImageAssets.photo,
+                    radius: 30,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    child: CircleAvatar(
+                      radius: 27,
+                      backgroundImage: AssetImage(
+                        ImageAssets.photo,
+                      ),
                     ),
                   ),
                 ),

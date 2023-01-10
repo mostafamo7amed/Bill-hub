@@ -1,5 +1,8 @@
 import 'dart:math';
-
+import 'dart:io';
+import 'package:bill_hub/app/model/buyer.dart';
+import 'package:bill_hub/app/model/invoice.dart';
+import 'package:bill_hub/app/model/vendor.dart';
 import 'package:bill_hub/app/modules/vendor/invoice/invoice_cubit/cubit.dart';
 import 'package:bill_hub/app/modules/vendor/invoice/invoice_cubit/states.dart';
 import 'package:flutter/material.dart';
@@ -265,12 +268,23 @@ class NewInvoiceView extends StatelessWidget {
                             shape: MaterialStatePropertyAll(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)))),
-                        onPressed: () {
+                        onPressed: () async {
                           //
                           if (cubit.invoice2 &&
                               cubit.invoice3 &&
                               cubit.invoice1) {
+                            Invoice invoice = Invoice(
+                                '$invoiceNumber',
+                                '$invoiceNumber',
+                                '${formatter.format(now)}',
+                                '${cubit.expDate}',
+                                Buyer(uid, cubit.customerName, 'email', cubit.customerPhone),
+                                Vendor(uid, 'مصطفي محمد', '01982765425', 'companyName', 'companyType', 'employment', false, 'blockReason'),
+                                cubit.customerProducts
+                            );
 
+                            File file  = await cubit.generatePDF(invoice);
+                            await cubit.openFile(file);
                           }
                         },
                         child: Text(

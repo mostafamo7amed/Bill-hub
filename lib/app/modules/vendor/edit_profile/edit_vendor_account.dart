@@ -9,19 +9,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 
 import '../../../../shared/components/component.dart';
+import '../../../../styles/icons_broken.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../../resources/value_manager.dart';
 
-class CreateVendorAccount extends StatelessWidget {
-  String password, email;
-  CreateVendorAccount(this.email, this.password, {Key? key}) : super(key: key);
+class EditVendorAccount extends StatelessWidget {
+  EditVendorAccount({Key? key}) : super(key: key);
   var formKey = GlobalKey<FormState>();
   var nameController = TextEditingController();
   var phoneController = TextEditingController();
   var compController = TextEditingController();
-  var typeCompController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -31,6 +30,10 @@ class CreateVendorAccount extends StatelessWidget {
         builder: (context, state) {
           var cubit = RegisterCubit.getCubit(context);
           return Scaffold(
+            appBar: AppBar(title: Text(
+              'المعلومات الشخصية',
+              style: getSemiBoldStyle(color: ColorManager.white, fontSize: 20),
+            ),),
             backgroundColor: ColorManager.white,
             body: SafeArea(
               child: Form(
@@ -43,17 +46,49 @@ class CreateVendorAccount extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: 200,
-                          width: 200,
-                          child: Image.asset(ImageAssets.splashLogo),
-                        ),
-                        Text(
-                          'أنشاء حساب بائع',
-                          style:
-                              getBoldStyle(color: Colors.black, fontSize: 20),
+                          height: 120,
+                          child: Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  width: 117,
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 50,
+                                        backgroundColor:ColorManager.primary,
+                                        child: const CircleAvatar(
+                                          radius: 48,
+                                          backgroundImage: AssetImage(
+                                            ImageAssets.photo,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: CircleAvatar(
+                                            radius: 16,
+                                            child: Icon(
+                                              IconBroken.Camera,
+                                              color: ColorManager.white,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         defaultFormField(
                             controller: nameController,
@@ -227,14 +262,6 @@ class CreateVendorAccount extends StatelessWidget {
                               navigateAndFinish(context, HomeVendorView());
                             },
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'بأستكمال عملية التسجيل انت توافق علي سياسة التطبيق',
-                          style:
-                          getSemiBoldStyle(color: Colors.grey, fontSize: 11),
                         ),
                         SizedBox(
                           height: 10,

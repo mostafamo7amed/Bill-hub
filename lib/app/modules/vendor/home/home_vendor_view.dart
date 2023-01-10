@@ -11,6 +11,7 @@ import '../../login/login_view.dart';
 import '../analysis/analysis.dart';
 import '../chat/chat_view.dart';
 import '../complaint/complaint.dart';
+import '../edit_profile/edit_vendor_account.dart';
 import '../invoice/invoice_view.dart';
 
 class HomeVendorView extends StatelessWidget {
@@ -47,13 +48,18 @@ class HomeVendorView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 14.0, right: 14),
               child: Row(children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                InkWell(
+                  onTap: () {
+                    navigateTo(context, EditVendorAccount());
+                  },
                   child: CircleAvatar(
-                    radius: 27,
-                    backgroundImage: AssetImage(
-                      ImageAssets.photo,
+                    radius: 30,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    child: CircleAvatar(
+                      radius: 27,
+                      backgroundImage: AssetImage(
+                        ImageAssets.photo,
+                      ),
                     ),
                   ),
                 ),

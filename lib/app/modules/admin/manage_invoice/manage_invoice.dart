@@ -284,22 +284,8 @@ class _ManageAdminInvoiceState extends State<ManageAdminInvoice> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      style: const ButtonStyle(
-                          backgroundColor:
-                          MaterialStatePropertyAll(Colors.green)),
-                      onPressed: () {
-                        //ToDo view user
-                      },
-                      child: Text(
-                        "تنبية بالدفع",
-                        style: getRegularStyle(color: ColorManager.white),
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  height: 10,
                 ),
               ],
             ),

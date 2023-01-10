@@ -45,7 +45,9 @@ class VisitorPayView extends StatelessWidget {
                   type: TextInputType.phone,
                 ),
                 SizedBox(height: 10,),
-                Row(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                   TextButton(
                     style: ButtonStyle(
                         backgroundColor:
@@ -55,20 +57,7 @@ class VisitorPayView extends StatelessWidget {
                     },
                     child: Text(
                       "عرض الفاتورة",
-                      style: getRegularStyle(color: ColorManager.white,fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(width: 10,),
-                  TextButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                        MaterialStatePropertyAll(ColorManager.primary)),
-                    onPressed: () {
-                      showPaymentDialog(context);
-                    },
-                    child: Text(
-                      "دفع الفاتورة",
-                      style: getRegularStyle(color: ColorManager.white,fontSize: 18),
+                      style: getRegularStyle(color: ColorManager.white,fontSize: 16),
                     ),
                   ),
                 ],),
@@ -160,27 +149,7 @@ class VisitorPayView extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () =>  navigateTo(context, PaymentView()),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Container(
-                      width: double.infinity,
-                        child: Image.asset(ImageAssets.googlePay,width: 30,height: 30,)),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 0.0,
-                      horizontal: 10.0
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    height: 1.0,
-                    color: Colors.grey[300],
-                  ),
-                ),
-                InkWell(
-                  onTap: () =>  navigateTo(context, PaymentView()),
+                  onTap: () {},
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Container(

@@ -4,39 +4,78 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 
 import '../../../../shared/components/component.dart';
+import '../../../../styles/icons_broken.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
 
-class CreateBuyerAccount extends StatelessWidget {
-  String password,email;
-  CreateBuyerAccount(this.email,this.password,{Key? key}) : super(key: key);
+class EditBuyerAccount extends StatelessWidget {
+  EditBuyerAccount({Key? key}) : super(key: key);
   var formKey = GlobalKey<FormState>();
   var nameController = TextEditingController();
   var phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'المعلومات الشخصية',
+          style: getSemiBoldStyle(color: ColorManager.white, fontSize: 20),
+        ),),
       backgroundColor: ColorManager.white,
       body: SafeArea(
         child: Form(
           key: formKey,
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 200,
-                    width: 200,
-                    child: Image.asset(ImageAssets.splashLogo),
+                    height: 120,
+                    child: Stack(
+                      alignment: Alignment.topCenter,
+                      children: [
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: 117,
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor:ColorManager.primary,
+                                  child: const CircleAvatar(
+                                    radius: 48,
+                                    backgroundImage: AssetImage(
+                                      ImageAssets.photo,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: CircleAvatar(
+                                      radius: 16,
+                                      child: Icon(
+                                        IconBroken.Camera,
+                                        color: ColorManager.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  Text(
-                    'أنشاء حساب مشتري',
-                    style: getBoldStyle(color: Colors.black, fontSize: 20),
-                  ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 15,),
                   defaultFormField(
                       controller: nameController,
                       label: AppStrings.enterName,
@@ -98,10 +137,6 @@ class CreateBuyerAccount extends StatelessWidget {
                   ),
                   const SizedBox(
                     height: 10,
-                  ),
-                  Text(
-                    'بأستكمال عملية التسجيل انت توافق علي سياسة التطبيق',
-                    style: getSemiBoldStyle(color: Colors.grey, fontSize: 11),
                   ),
                 ],
               ),

@@ -10,9 +10,9 @@ class AppStrings{
   static String enterEmail = "أدخل بريدك الإلكتروني";
   static String enterPassword = "أدخل كلمة المرور";
   static String signIn ='تسجيل الدخول';
-  static String signVisitor ='سجيل كضيف';
+  static String signVisitor ='تسجيل كضيف';
   static String createAccount ='إنشاء حساب';
-  static String forgetPassword ='نسيت كلة المرور؟';
+  static String forgetPassword ='نسيت كلمة المرور؟';
   static String enterBillNumber ='أدخل رقم الفاتورة';
   static String reEnterPassword ='تأكيد كلمة المرور';
   static String enterName ='أدخل الاسم';

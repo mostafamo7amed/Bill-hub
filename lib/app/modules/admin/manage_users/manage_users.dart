@@ -4,7 +4,8 @@ import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
 
 class ManageUsers extends StatelessWidget {
-  const ManageUsers({Key? key}) : super(key: key);
+  ManageUsers({Key? key}) : super(key: key);
+  var rejectController =TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +95,8 @@ class ManageUsers extends StatelessWidget {
                       backgroundColor: MaterialStatePropertyAll(Colors.red)),
                   onPressed: () {
                     //ToDo block user
+                    rejectController.text = '';
+                    showRejectDialog(context);
                   },
                   child: Text(
                     "حظر",
@@ -225,9 +228,87 @@ class ManageUsers extends StatelessWidget {
                           backgroundColor: MaterialStatePropertyAll(Colors.red)),
                       onPressed: () {
                         //ToDo block user
+                        rejectController.text = '';
+                        Navigator.pop(context);
+                        showRejectDialog(context);
                       },
                       child: Text(
                         "حظر",
+                        style: getRegularStyle(color: ColorManager.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  Future showRejectDialog(context) => showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "سبب رفض البائع",
+                  style: getBoldStyle(
+                      color: ColorManager.black, fontSize: 20),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller:rejectController,
+                        maxLines: null,
+                        style: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 5),
+                          hintText: 'اكتب شئ ...',
+                          border: OutlineInputBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return '';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.text,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      style: const ButtonStyle(
+                          backgroundColor:
+                          MaterialStatePropertyAll(Colors.green)),
+                      onPressed: () {
+                        //ToDo view user
+                      },
+                      child: Text(
+                        "أرسال",
                         style: getRegularStyle(color: ColorManager.white),
                       ),
                     ),
