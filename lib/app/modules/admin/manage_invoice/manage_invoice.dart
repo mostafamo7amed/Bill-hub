@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import '../../../../styles/icons_broken.dart';
 import '../../../resources/color_manager.dart';
@@ -26,73 +27,88 @@ class _ManageAdminInvoiceState extends State<ManageAdminInvoice> {
           style: getSemiBoldStyle(color: ColorManager.white, fontSize: 20),
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 100,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: ColorManager.primary,
-              borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10.0, left: 10, bottom: 20),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: searchController,
-                        style: getRegularStyle(
-                            color: ColorManager.white, fontSize: 16),
-                        decoration: InputDecoration(
-                          label: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Text('بحث',
-                                style: getRegularStyle(
-                                    color: ColorManager.white, fontSize: 16)),
-                          ),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: ColorManager.gray,
-                          ),
-                          border: const OutlineInputBorder(),
-                          labelStyle: getRegularStyle(
+      body: ConditionalBuilder(
+        condition: false,
+        builder: (context) => Column(
+          children: [
+            Container(
+              height: 100,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: ColorManager.primary,
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(right: 10.0, left: 10, bottom: 20),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: searchController,
+                          style: getRegularStyle(
                               color: ColorManager.white, fontSize: 16),
+                          decoration: InputDecoration(
+                            label: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Text('بحث',
+                                  style: getRegularStyle(
+                                      color: ColorManager.white, fontSize: 16)),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: ColorManager.gray,
+                            ),
+                            border: const OutlineInputBorder(),
+                            labelStyle: getRegularStyle(
+                                color: ColorManager.white, fontSize: 16),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return '';
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (value) {},
+                          keyboardType: TextInputType.text,
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return '';
-                          }
-                          return null;
-                        },
-                        onFieldSubmitted: (value) {},
-                        keyboardType: TextInputType.text,
                       ),
-                    ),
-                    SizedBox(width: 10,),
-                    DropdownButton(
-                      dropdownColor: ColorManager.primary,
-                      value: value,
-                      icon: Icon(Icons.arrow_drop_down_outlined,color: Colors.white,size: 15,),
-                      items: items.map(buildMenuItem).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          this.value = value;
-                        });
-                      },
-                    ),
-                  ],
+                      SizedBox(
+                        width: 10,
+                      ),
+                      DropdownButton(
+                        dropdownColor: ColorManager.primary,
+                        value: value,
+                        icon: Icon(
+                          Icons.arrow_drop_down_outlined,
+                          color: Colors.white,
+                          size: 15,
+                        ),
+                        items: items.map(buildMenuItem).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            this.value = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(child: ManageBillListView())
-        ],
+            Expanded(child: ManageBillListView())
+          ],
+        ),
+        fallback: (context) => Center(
+            child: Text(
+          'لا توجد فواتير حاليا',
+          style: getSemiBoldStyle(color: ColorManager.black, fontSize: 16),
+        )),
       ),
     );
   }
@@ -100,12 +116,12 @@ class _ManageAdminInvoiceState extends State<ManageAdminInvoice> {
   DropdownMenuItem<String> buildMenuItem(String text) => DropdownMenuItem(
         value: text,
         child: Container(
-          color: ColorManager.primary,
-            child: Text(text,style: getSemiBoldStyle(color: ColorManager.white,fontSize: 16),)
-        ),
+            color: ColorManager.primary,
+            child: Text(
+              text,
+              style: getSemiBoldStyle(color: ColorManager.white, fontSize: 16),
+            )),
       );
-
-
 
   Widget ManageBillListView() {
     return SingleChildScrollView(
@@ -120,10 +136,10 @@ class _ManageAdminInvoiceState extends State<ManageAdminInvoice> {
                 return BillItemBuilder(context);
               },
               separatorBuilder: (context, index) => const SizedBox(
-                height: 2,
-              ),
+                    height: 2,
+                  ),
               itemCount: 10 // todo list students
-          ),
+              ),
         ],
       ),
     );
@@ -146,7 +162,11 @@ class _ManageAdminInvoiceState extends State<ManageAdminInvoice> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Icon(IconBroken.Document,size: 32,color: ColorManager.primary,),
+                  child: Icon(
+                    IconBroken.Document,
+                    size: 32,
+                    color: ColorManager.primary,
+                  ),
                 ),
                 Expanded(
                   child: Padding(
@@ -176,10 +196,12 @@ class _ManageAdminInvoiceState extends State<ManageAdminInvoice> {
                   "لم يتم السداد",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: getSemiBoldStyle(
-                      color: ColorManager.gray, fontSize: 12),
+                  style:
+                      getSemiBoldStyle(color: ColorManager.gray, fontSize: 12),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
               ],
             )),
       ),
@@ -187,110 +209,110 @@ class _ManageAdminInvoiceState extends State<ManageAdminInvoice> {
   }
 
   Future showBillInfoDialog(context) => showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "بيانات الفاتورة",
-                  style: getBoldStyle(
-                      color: ColorManager.black, fontSize: 20),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Column(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "البائع",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.gray, fontSize: 12),
+                      "بيانات الفاتورة",
+                      style:
+                          getBoldStyle(color: ColorManager.black, fontSize: 20),
                     ),
-                    Text(
-                      "علي احمد",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.black, fontSize: 14),
+                    SizedBox(
+                      height: 10,
                     ),
-                    Text(
-                      "المشتري",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.gray, fontSize: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "البائع",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.gray, fontSize: 12),
+                        ),
+                        Text(
+                          "علي احمد",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.black, fontSize: 14),
+                        ),
+                        Text(
+                          "المشتري",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.gray, fontSize: 12),
+                        ),
+                        Text(
+                          "احمد جمال",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.black, fontSize: 14),
+                        ),
+                        Text(
+                          "المشتريات",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.gray, fontSize: 12),
+                        ),
+                        Text(
+                          "لاب توب",
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.black, fontSize: 14),
+                        ),
+                        Text(
+                          "الاجمالي",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.gray, fontSize: 12),
+                        ),
+                        Text(
+                          "5700",
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.black, fontSize: 14),
+                        ),
+                        Text(
+                          "تاريخ انتهاء الصلاحية",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.gray, fontSize: 12),
+                        ),
+                        Text(
+                          "35 Jun 2023",
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
+                          style: getSemiBoldStyle(
+                              color: ColorManager.black, fontSize: 14),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "احمد جمال",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.black, fontSize: 14),
-                    ),
-                    Text(
-                      "المشتريات",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.gray, fontSize: 12),
-                    ),
-                    Text(
-                      "لاب توب",
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.black, fontSize: 14),
-                    ),
-                    Text(
-                      "الاجمالي",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.gray, fontSize: 12),
-                    ),
-                    Text(
-                      "5700",
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.black, fontSize: 14),
-                    ),
-                    Text(
-                      "تاريخ انتهاء الصلاحية",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.gray, fontSize: 12),
-                    ),
-                    Text(
-                      "35 Jun 2023",
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                      style: getSemiBoldStyle(
-                          color: ColorManager.black, fontSize: 14),
+                    SizedBox(
+                      height: 10,
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
-    },
-  );
 }

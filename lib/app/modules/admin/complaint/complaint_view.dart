@@ -1,4 +1,5 @@
 import 'package:bill_hub/shared/components/component.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 
 import '../../../resources/assets_manager.dart';
@@ -15,11 +16,17 @@ class ComplaintAdminView extends StatelessWidget {
       appBar: AppBar(
         title: Text('الشكاوي',style: getSemiBoldStyle(color: ColorManager.white,fontSize: 20),),
       ),
-      body: ComplaintListView(),
+      body: ConditionalBuilder(
+        condition: false,
+        builder: (context) => ComplaintListView(context),
+        fallback: (context) =>
+        Center(child: Text('لا توجد شكاوي حاليا',style: getSemiBoldStyle(color: ColorManager.black,fontSize: 16),)
+        ),
+      ),
     );
   }
 
-  Widget ComplaintListView() {
+  Widget ComplaintListView(context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       physics: const BouncingScrollPhysics(),
