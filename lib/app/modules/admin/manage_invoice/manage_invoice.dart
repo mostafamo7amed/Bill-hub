@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../styles/icons_broken.dart';
-import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
 

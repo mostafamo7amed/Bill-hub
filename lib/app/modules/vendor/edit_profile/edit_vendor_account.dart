@@ -1,19 +1,17 @@
-import 'package:bill_hub/app/modules/vendor/create_account/registration_cubit/cubit.dart';
-import 'package:bill_hub/app/modules/vendor/create_account/registration_cubit/states.dart';
 import 'package:bill_hub/app/modules/vendor/home/home_vendor_view.dart';
 import 'package:bill_hub/app/resources/strings_manager.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
-
 import '../../../../shared/components/component.dart';
 import '../../../../styles/icons_broken.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../../resources/value_manager.dart';
+import '../create_account/vendor_registration_cubit/cubit.dart';
+import '../create_account/vendor_registration_cubit/states.dart';
 
 class EditVendorAccount extends StatelessWidget {
   EditVendorAccount({Key? key}) : super(key: key);
@@ -24,11 +22,11 @@ class EditVendorAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RegisterCubit(),
-      child: BlocConsumer<RegisterCubit, RegisterStates>(
+      create: (context) => RegisterVendorCubit(),
+      child: BlocConsumer<RegisterVendorCubit, RegisterVendorStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          var cubit = RegisterCubit.getCubit(context);
+          var cubit = RegisterVendorCubit.getCubit(context);
           return Scaffold(
             appBar: AppBar(title: Text(
               'المعلومات الشخصية',

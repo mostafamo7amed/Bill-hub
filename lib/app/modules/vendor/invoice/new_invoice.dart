@@ -279,7 +279,7 @@ class NewInvoiceView extends StatelessWidget {
                                 '${formatter.format(now)}',
                                 '${cubit.expDate}',
                                 Buyer(uid, cubit.customerName, 'email', cubit.customerPhone),
-                                Vendor(uid, 'مصطفي محمد', '01982765425', 'companyName', 'companyType', 'employment', false, 'blockReason'),
+                                Vendor(uid, 'مصطفي محمد','email', '01982765425', 'companyName', 'companyType', 'employment', false, 'blockReason'),
                                 cubit.customerProducts
                             );
 

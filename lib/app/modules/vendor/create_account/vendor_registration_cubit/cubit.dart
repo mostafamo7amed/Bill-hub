@@ -1,11 +1,12 @@
-import 'package:bill_hub/app/modules/vendor/create_account/registration_cubit/states.dart';
+import 'package:bill_hub/app/model/vendor.dart';
+import 'package:bill_hub/app/modules/vendor/create_account/vendor_registration_cubit/states.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 
-class RegisterCubit extends Cubit<RegisterStates> {
-  RegisterCubit() : super(RegisterInitStates());
+class RegisterVendorCubit extends Cubit<RegisterVendorStates> {
+  RegisterVendorCubit() : super(InitStates());
 
-  static RegisterCubit getCubit(context) => BlocProvider.of(context);
+  static RegisterVendorCubit getCubit(context) => BlocProvider.of(context);
 
   String? services;
   String? companyType;
@@ -130,13 +131,13 @@ class RegisterCubit extends Cubit<RegisterStates> {
 
   changeDropDown(String value) {
     this.services = value;
-    emit(RegisterChangeDropDownState());
+    emit(ChangeDropDownState());
   }
 
 
   changeCompanyDropDown(String value) {
     this.companyType = value;
-    emit(RegisterChangeCompanyDropDownState());
+    emit(ChangeCompanyDropDownState());
   }
 
 
@@ -145,7 +146,35 @@ class RegisterCubit extends Cubit<RegisterStates> {
             (element) => element['parentId'].toString()==value.toString(),
     ).toList();
     companyType =null;
-    emit(RegisterChangeCompanyListState());
+    emit(ChangeCompanyListState());
   }
 
+
+
+
+
+  void createVendorAccount({
+    required String userType,
+    required String email,
+    required String name,
+    required String phone,
+    required String id,
+    required String companyName,
+    required String companyType,
+    required String employment,
+    required String blockReason,
+    required bool isBlocked,
+  }) {
+    emit(CreateVendorLoadingState());
+    Vendor vendorModel =Vendor(id, name, email, phone, companyName, companyType, employment, isBlocked, blockReason);
+      FirebaseFirestore.instance
+          .collection(userType)
+          .doc(id)
+          .set(vendorModel.toMap()!)
+          .then((value) {
+        emit(CreateVendorSuccessState(id));
+      }).catchError((e) {
+        emit(CreateVendorErrorState());
+      });
+  }
 }

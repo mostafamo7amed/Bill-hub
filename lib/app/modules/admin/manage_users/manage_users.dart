@@ -1,22 +1,48 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../model/vendor.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
+import '../home/home_cubit/cubit.dart';
+import '../home/home_cubit/states.dart';
 
 class ManageUsers extends StatelessWidget {
   ManageUsers({Key? key}) : super(key: key);
   var rejectController =TextEditingController();
-
+  var formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('إدارة البائعين',style: getSemiBoldStyle(color: ColorManager.white,fontSize: 20),),
-      ),
-      body: UserListView(),
+    return BlocConsumer<AdminCubit,AdminStates>(
+      listener: (context, state) {
+
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('إدارة البائعين',style: getSemiBoldStyle(color: ColorManager.white,fontSize: 20),),
+          ),
+          body: ConditionalBuilder(
+            condition: AdminCubit.getCubit(context)
+                .vendorListModel
+                .isNotEmpty,
+            builder: (context) => UserListView(context),
+            fallback: (context) =>
+            AdminCubit.getCubit(context)
+                .vendorListModel.length==0?
+                Center(child: Text('لا توجد طلبات حاليا',style: getSemiBoldStyle(color: ColorManager.black,fontSize: 16),)):
+                Center(child: CircularProgressIndicator(
+                strokeWidth: 3,
+                backgroundColor: ColorManager.primary,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
-  Widget UserListView() {
+  Widget UserListView(context) {
+    var cubit = AdminCubit.getCubit(context);
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       physics: const BouncingScrollPhysics(),
@@ -26,21 +52,21 @@ class ManageUsers extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                return UserItemBuilder(context);
+                return UserItemBuilder(context,cubit.vendorListModel[index],index);
               },
               separatorBuilder: (context, index) => const SizedBox(
                 height: 2,
               ),
-              itemCount: 10 // todo list students
+              itemCount: cubit.vendorListModel.length,
           ),
         ],
       ),
     );
   }
 
-  Widget UserItemBuilder(context) {
+  Widget UserItemBuilder(context,Vendor model,index) {
     return InkWell(
-      onTap: () => showUserInfoDialog(context),
+      onTap: () => showUserInfoDialog(context,model,index),
       child: Padding(
         padding: const EdgeInsets.only(
           left: 5,
@@ -59,14 +85,14 @@ class ManageUsers extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "محمود محمد علي",
+                          "${model.name}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: getSemiBoldStyle(
                               color: ColorManager.darkGray, fontSize: 16),
                         ),
                         Text(
-                          "اسم الشركة",
+                          "${model.companyName}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: getSemiBoldStyle(
@@ -82,7 +108,14 @@ class ManageUsers extends StatelessWidget {
                       backgroundColor:
                       MaterialStatePropertyAll(Colors.green)),
                   onPressed: () {
-                    //ToDo view user
+                    var cubit  = AdminCubit.getCubit(context);
+                    if(model.isBlocked==true){
+                      cubit.RejectUser(
+                          isBlocked: false,
+                          index: index,
+                          blockReason: 'تم قبول طلبكم بأستخدام BillHub نتمني لكم تجربة رائعة ');
+                      cubit.removeVendor(index);
+                    }
                   },
                   child: Text(
                     "قبول",
@@ -94,12 +127,17 @@ class ManageUsers extends StatelessWidget {
                   style: const ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(Colors.red)),
                   onPressed: () {
-                    //ToDo block user
-                    rejectController.text = '';
-                    showRejectDialog(context);
+                    if(model.blockReason=='يتم الان مراجعة بياناتك سوف نعلمك في حال قبولك'){
+                      rejectController.text = '';
+                      showRejectDialog(context,index);
+                    }
                   },
-                  child: Text(
-                    "حظر",
+                  child: model.blockReason!='يتم الان مراجعة بياناتك سوف نعلمك في حال قبولك'?
+                    Text(
+                    "تم الرفض",
+                    style: getRegularStyle(color: ColorManager.white),
+                  ):Text(
+                    "رفض",
                     style: getRegularStyle(color: ColorManager.white),
                   ),
                 ),
@@ -113,9 +151,10 @@ class ManageUsers extends StatelessWidget {
     );
   }
 
-  Future showUserInfoDialog(context) => showDialog(
+  Future showUserInfoDialog(context,Vendor model,index) => showDialog(
     context: context,
     builder: (context) {
+      var cubit  = AdminCubit.getCubit(context);
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -144,7 +183,7 @@ class ManageUsers extends StatelessWidget {
                           color: ColorManager.gray, fontSize: 14),
                     ),
                     Text(
-                      "محمود محمد علي",
+                      "${model.name}",
                       style: getSemiBoldStyle(
                           color: ColorManager.black, fontSize: 14),
                     ),
@@ -162,7 +201,43 @@ class ManageUsers extends StatelessWidget {
                           color: ColorManager.gray, fontSize: 14),
                     ),
                     Text(
-                      "الصفا",
+                      "${model.companyName}",
+                      style: getSemiBoldStyle(
+                          color: ColorManager.black, fontSize: 14),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "قطاع الخدمات",
+                      style: getSemiBoldStyle(
+                          color: ColorManager.gray, fontSize: 14),
+                    ),
+                    Text(
+                      "${model.employment}",
+                      style: getSemiBoldStyle(
+                          color: ColorManager.black, fontSize: 14),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "نوع الشركة",
+                      style: getSemiBoldStyle(
+                          color: ColorManager.gray, fontSize: 14),
+                    ),
+                    Text(
+                      "${model.companyType}",
                       style: getSemiBoldStyle(
                           color: ColorManager.black, fontSize: 14),
                     ),
@@ -180,7 +255,7 @@ class ManageUsers extends StatelessWidget {
                           color: ColorManager.gray, fontSize: 14),
                     ),
                     Text(
-                      "+92873656789",
+                      "${model.phone}",
                       style: getSemiBoldStyle(
                           color: ColorManager.black, fontSize: 14),
                     ),
@@ -198,7 +273,7 @@ class ManageUsers extends StatelessWidget {
                           color: ColorManager.gray, fontSize: 14),
                     ),
                     Text(
-                      "example23@example.org",
+                      "${model.email}",
                       style: getSemiBoldStyle(
                           color: ColorManager.black, fontSize: 14),
                     ),
@@ -215,7 +290,13 @@ class ManageUsers extends StatelessWidget {
                           backgroundColor:
                           MaterialStatePropertyAll(Colors.green)),
                       onPressed: () {
-                        //ToDo view user
+                        if(model.isBlocked==true){
+                          cubit.RejectUser(
+                              isBlocked: false,
+                              index: index,
+                              blockReason: 'تم قبول طلبكم بأستخدام BillHub نتمني لكم تجربة رائعة ');
+                          cubit.removeVendor(index);
+                        }
                       },
                       child: Text(
                         "قبول",
@@ -227,13 +308,18 @@ class ManageUsers extends StatelessWidget {
                       style: const ButtonStyle(
                           backgroundColor: MaterialStatePropertyAll(Colors.red)),
                       onPressed: () {
-                        //ToDo block user
-                        rejectController.text = '';
-                        Navigator.pop(context);
-                        showRejectDialog(context);
+                        if(model.blockReason =='يتم الان مراجعة بياناتك سوف نعلمك في حال قبولك'){
+                          rejectController.text = '';
+                          Navigator.pop(context);
+                          showRejectDialog(context,index);
+                        }
                       },
-                      child: Text(
-                        "حظر",
+                      child: model.blockReason!='يتم الان مراجعة بياناتك سوف نعلمك في حال قبولك'?
+                      Text(
+                        "تم الرفض",
+                        style: getRegularStyle(color: ColorManager.white),
+                      ):Text(
+                        "رفض",
                         style: getRegularStyle(color: ColorManager.white),
                       ),
                     ),
@@ -247,7 +333,7 @@ class ManageUsers extends StatelessWidget {
     },
   );
 
-  Future showRejectDialog(context) => showDialog(
+  Future showRejectDialog(context,index) => showDialog(
     context: context,
     builder: (context) {
       return Dialog(
@@ -258,63 +344,71 @@ class ManageUsers extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "سبب رفض البائع",
-                  style: getBoldStyle(
-                      color: ColorManager.black, fontSize: 20),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller:rejectController,
-                        maxLines: null,
-                        style: getRegularStyle(color: ColorManager.black,fontSize: 16),
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 5),
-                          hintText: 'اكتب شئ ...',
-                          border: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10.0)),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "سبب رفض البائع",
+                    style: getBoldStyle(
+                        color: ColorManager.black, fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller:rejectController,
+                          maxLines: null,
+                          style: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 5),
+                            hintText: 'اكتب شئ ...',
+                            border: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
+                            ),
                           ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'أخبر البائع سبب الرفض';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.text,
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return '';
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        style: const ButtonStyle(
+                            backgroundColor:
+                            MaterialStatePropertyAll(Colors.green)),
+                        onPressed: () {
+                          var cubit = AdminCubit.getCubit(context);
+                          if(formKey.currentState!.validate()){
+                            cubit.RejectUser(isBlocked: true, index: index, blockReason: rejectController.text);
+                            rejectController.text ='';
+                            Navigator.pop(context);
                           }
-                          return null;
                         },
-                        keyboardType: TextInputType.text,
+                        child: Text(
+                          "أرسال",
+                          style: getRegularStyle(color: ColorManager.white),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      style: const ButtonStyle(
-                          backgroundColor:
-                          MaterialStatePropertyAll(Colors.green)),
-                      onPressed: () {
-                        //ToDo view user
-                      },
-                      child: Text(
-                        "أرسال",
-                        style: getRegularStyle(color: ColorManager.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

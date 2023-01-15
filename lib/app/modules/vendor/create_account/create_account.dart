@@ -1,13 +1,12 @@
-import 'package:bill_hub/app/modules/vendor/create_account/registration_cubit/cubit.dart';
-import 'package:bill_hub/app/modules/vendor/create_account/registration_cubit/states.dart';
+import 'package:bill_hub/app/modules/vendor/create_account/vendor_registration_cubit/cubit.dart';
+import 'package:bill_hub/app/modules/vendor/create_account/vendor_registration_cubit/states.dart';
 import 'package:bill_hub/app/modules/vendor/home/home_vendor_view.dart';
 import 'package:bill_hub/app/resources/strings_manager.dart';
+import 'package:bill_hub/shared/network/local/cache_helper.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
-
 import '../../../../shared/components/component.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
@@ -15,21 +14,25 @@ import '../../../resources/styles_manager.dart';
 import '../../../resources/value_manager.dart';
 
 class CreateVendorAccount extends StatelessWidget {
-  String password, email;
-  CreateVendorAccount(this.email, this.password, {Key? key}) : super(key: key);
+  String password, email,id;
+  CreateVendorAccount(this.email, this.password,this.id, {Key? key}) : super(key: key);
   var formKey = GlobalKey<FormState>();
   var nameController = TextEditingController();
   var phoneController = TextEditingController();
   var compController = TextEditingController();
-  var typeCompController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RegisterCubit(),
-      child: BlocConsumer<RegisterCubit, RegisterStates>(
-        listener: (context, state) {},
+      create: (context) => RegisterVendorCubit(),
+      child: BlocConsumer<RegisterVendorCubit, RegisterVendorStates>(
+        listener: (context, state) {
+          if(state is CreateVendorSuccessState){
+            CacheHelper.saveData(key: 'uid', data: state.id);
+            navigateAndFinish(context, HomeVendorView());
+          }
+        },
         builder: (context, state) {
-          var cubit = RegisterCubit.getCubit(context);
+          var cubit = RegisterVendorCubit.getCubit(context);
           return Scaffold(
             backgroundColor: ColorManager.white,
             body: SafeArea(
@@ -76,10 +79,6 @@ class CreateVendorAccount extends StatelessWidget {
                               }
                               return null;
                             },
-                            pressedShow: () {
-                              // TODO change visibility
-                            },
-                            isPassword: true,
                             type: TextInputType.number),
                         defaultFormField(
                             context: context,
@@ -91,10 +90,6 @@ class CreateVendorAccount extends StatelessWidget {
                               }
                               return null;
                             },
-                            pressedShow: () {
-                              // TODO change visibility
-                            },
-                            isPassword: true,
                             type: TextInputType.text),
                         Container(
                           height: 45,
@@ -206,7 +201,7 @@ class CreateVendorAccount extends StatelessWidget {
                           ),
                           child: MaterialButton(
                             child: ConditionalBuilder(
-                              condition: true, //TODO loading state
+                              condition: state is !CreateVendorLoadingState,
                               builder: (context) => const Text(
                                 'حفظ البيانات',
                                 style: TextStyle(
@@ -223,8 +218,23 @@ class CreateVendorAccount extends StatelessWidget {
                               ),
                             ),
                             onPressed: () {
-                              //TODO create press
-                              navigateAndFinish(context, HomeVendorView());
+                              if(formKey.currentState!.validate()&&cubit.services!=null&&cubit.companyType!=null){
+                                int index= int.parse(cubit.services!);
+                                int index2= int.parse(cubit.companyType!);
+                                print('========================${cubit.states[index2]['name']}');
+                                print('========================${cubit.servicesItems[index]['name']}');
+                                cubit.createVendorAccount(
+                                    userType: 'Vendor',
+                                    email: email,
+                                    name: nameController.text,
+                                    phone: phoneController.text,
+                                    id: id,
+                                    companyName: compController.text,
+                                    companyType: cubit.states[index2]['name'],
+                                    employment: cubit.servicesItems[index]['name'],
+                                    blockReason: 'يتم الان مراجعة بياناتك سوف نعلمك في حال قبولك',
+                                    isBlocked: true);
+                              }
                             },
                           ),
                         ),

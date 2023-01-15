@@ -155,6 +155,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       );
 
   void submit() {
-    navigateAndFinish(context, LoginView());
+    CacheHelper.saveData(key: 'onBoarding', data: true).then((value){
+      navigateAndFinish(context, LoginView());
+    });
   }
 }
