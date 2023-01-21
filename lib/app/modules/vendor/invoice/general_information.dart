@@ -110,7 +110,7 @@ class GeneralInformation extends StatelessWidget {
                             ),
                             onPressed: () {
                               if(cubit.expDate != ''){
-                                cubit.change1();
+                                cubit.change1(true);
                                 Navigator.pop(context);
                               }
                             },

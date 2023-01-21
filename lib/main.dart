@@ -14,7 +14,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Bloc.observer = MyBlocObserver();
-  await Firebase.initializeApp();
   await CacheHelper.init();
   await initFont();
   runApp(const MyApp());

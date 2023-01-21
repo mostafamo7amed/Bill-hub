@@ -221,8 +221,7 @@ class CreateVendorAccount extends StatelessWidget {
                               if(formKey.currentState!.validate()&&cubit.services!=null&&cubit.companyType!=null){
                                 int index= int.parse(cubit.services!);
                                 int index2= int.parse(cubit.companyType!);
-                                print('========================${cubit.states[index2]['name']}');
-                                print('========================${cubit.servicesItems[index]['name']}');
+
                                 cubit.createVendorAccount(
                                     userType: 'Vendor',
                                     email: email,

@@ -5,6 +5,7 @@ import 'package:bill_hub/app/model/invoice.dart';
 import 'package:bill_hub/app/model/vendor.dart';
 import 'package:bill_hub/app/modules/vendor/invoice/invoice_cubit/cubit.dart';
 import 'package:bill_hub/app/modules/vendor/invoice/invoice_cubit/states.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +27,18 @@ class NewInvoiceView extends StatelessWidget {
   Widget build(BuildContext context) {
     int invoiceNumber = random.nextInt(1000000000);
     return BlocConsumer<InvoiceCubit, InvoiceStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is CreateInvoiceSuccessState) {
+          var cubit = InvoiceCubit.getCubit(context);
+          cubit.change1(false);
+          cubit.change2(false);
+          cubit.change3(false);
+          cubit.expDate = '';
+          cubit.removeAllProductToList();
+          cubit.GetAllVendorInvoice();
+          Navigator.pop(context);
+        }
+      },
       builder: (context, state) {
         var cubit = InvoiceCubit.getCubit(context);
         return Scaffold(
@@ -269,7 +281,6 @@ class NewInvoiceView extends StatelessWidget {
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)))),
                         onPressed: () async {
-                          //
                           if (cubit.invoice2 &&
                               cubit.invoice3 &&
                               cubit.invoice1) {
@@ -278,12 +289,21 @@ class NewInvoiceView extends StatelessWidget {
                                 '$invoiceNumber',
                                 '${formatter.format(now)}',
                                 '${cubit.expDate}',
-                                Buyer(uid, cubit.customerName, 'email', cubit.customerPhone),
-                                Vendor(uid, 'مصطفي محمد','email', '01982765425', 'companyName', 'companyType', 'employment', false, 'blockReason'),
-                                cubit.customerProducts
-                            );
-
-                            File file  = await cubit.generatePDF(invoice);
+                                Buyer(uid, cubit.customerName, 'email',
+                                    cubit.customerPhone),
+                                Vendor(
+                                    cubit.vendorModel!.uid,
+                                    cubit.vendorModel!.name,
+                                    cubit.vendorModel!.email,
+                                    cubit.vendorModel!.phone,
+                                    cubit.vendorModel!.companyName,
+                                    cubit.vendorModel!.companyType,
+                                    cubit.vendorModel!.employment,
+                                    false,
+                                    'blockReason'),
+                                cubit.customerProducts);
+                            File file = await cubit.generatePDF(
+                                invoice, false, '${formatter.format(now)}');
                             await cubit.openFile(file);
                           }
                         },
@@ -303,17 +323,47 @@ class NewInvoiceView extends StatelessWidget {
                             shape: MaterialStatePropertyAll(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)))),
-                        onPressed: () {
+                        onPressed: () async {
                           if (cubit.invoice2 &&
                               cubit.invoice3 &&
                               cubit.invoice1) {
-
+                            Invoice invoice = Invoice(
+                                '$invoiceNumber',
+                                '$invoiceNumber',
+                                '${formatter.format(now)}',
+                                '${cubit.expDate}',
+                                Buyer(uid, cubit.customerName, 'email',
+                                    cubit.customerPhone),
+                                Vendor(
+                                    cubit.vendorModel!.uid,
+                                    cubit.vendorModel!.name,
+                                    cubit.vendorModel!.email,
+                                    cubit.vendorModel!.phone,
+                                    cubit.vendorModel!.companyName,
+                                    cubit.vendorModel!.companyType,
+                                    cubit.vendorModel!.employment,
+                                    false,
+                                    'blockReason'),
+                                cubit.customerProducts);
+                            await cubit.generatePDF(
+                                invoice, true, '${formatter.format(now)}');
                           }
                         },
-                        child: Text(
-                          "حفظ",
-                          style: getRegularStyle(
-                              color: ColorManager.white, fontSize: 16),
+                        child: ConditionalBuilder(
+                          condition: state is! UploadInvoiceLoadingState,
+                          builder: (context) => Text(
+                            "حفظ",
+                            style: getRegularStyle(
+                                color: ColorManager.white, fontSize: 16),
+                          ),
+                          fallback: (context) => const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              backgroundColor: Colors.white,
+                            ),
+                          ),
                         ),
                       )
                     ],

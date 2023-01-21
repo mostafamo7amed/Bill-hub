@@ -1,4 +1,5 @@
 import 'package:bill_hub/app/model/product.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +23,13 @@ class _CustomerProductsState extends State<CustomerProducts> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<InvoiceCubit, InvoiceStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is InvoiceRemoveProductToListState){
+          if(InvoiceCubit.getCubit(context).customerProducts.isEmpty){
+            InvoiceCubit.getCubit(context).change3(false);
+          }
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
@@ -90,7 +97,7 @@ class _CustomerProductsState extends State<CustomerProducts> {
                     ),
                 itemCount: InvoiceCubit.getCubit(context)
                     .customerProducts
-                    .length // todo list students
+                    .length,
                 ),
           ],
         ),
@@ -198,7 +205,14 @@ class _CustomerProductsState extends State<CustomerProducts> {
           var  cubit =InvoiceCubit.getCubit(context);
           return BlocConsumer<InvoiceCubit,InvoiceStates>(
            listener: (context, state) {
-
+             if(state is GetProductPriceSuccessState){
+               int amount = int.parse(amountController.text);
+               cubit.addProductToList(
+                   Product('1',cubit.value, cubit.price, amount,false));
+               cubit.change3(true);
+               amountController.text = '';
+               Navigator.pop(context);
+             }
            },
             builder: (context, state) {
               return Dialog(
@@ -242,7 +256,7 @@ class _CustomerProductsState extends State<CustomerProducts> {
                                     color: Colors.grey,
                                     size: 20,
                                   ),
-                                  items: cubit.items.map(buildMenuItem).toList(),
+                                  items: cubit.allProducts.map(buildMenuItem).toList(),
                                   style: getSemiBoldStyle(
                                       color: ColorManager.black, fontSize: 16),
                                   onChanged: (value) {
@@ -294,20 +308,26 @@ class _CustomerProductsState extends State<CustomerProducts> {
                                     backgroundColor:
                                     MaterialStatePropertyAll(Colors.green)),
                                 onPressed: () {
-                                  //ToDo view user
                                   if (formKay.currentState!.validate()) {
                                     var cubit =InvoiceCubit.getCubit(context);
-                                    int amount = int.parse(amountController.text);
-                                    cubit.addProductToList(
-                                        Product(cubit.value, 27000, amount));
-                                    cubit.change3();
-                                    amountController.text = '';
-                                    Navigator.pop(context);
+                                    cubit.getProductPrice(cubit.value!);
                                   }
                                 },
-                                child: Text(
-                                  "إضافة",
-                                  style: getRegularStyle(color: ColorManager.white),
+                                child: ConditionalBuilder(
+                                  condition: state is! GetProductPriceLoadingState,
+                                  builder: (context) => Text(
+                                    "إضافة",
+                                    style: getRegularStyle(
+                                        color: ColorManager.white, fontSize: 16),
+                                  ),
+                                  fallback: (context) => const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      backgroundColor: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],

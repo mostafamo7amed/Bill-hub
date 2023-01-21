@@ -82,7 +82,7 @@ class CustomerInformation extends StatelessWidget {
                       onPressed: () {
                         if(formKay.currentState!.validate()){
                           cubit.changeCustomerData(nameController.text, phoneController.text);
-                          cubit.change2();
+                          cubit.change2(true);
                           Navigator.pop(context);
                         }
                       },

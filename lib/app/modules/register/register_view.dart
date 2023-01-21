@@ -169,7 +169,7 @@ class _RegisterViewState extends State<RegisterView> {
                             ),
                             child: MaterialButton(
                               child: ConditionalBuilder(
-                                condition: state is !RegisterLoadingState, //TODO loading state
+                                condition: state is !RegisterLoadingState,
                                 builder: (context) => const Text(
                                   'أنشاء حساب',
                                   style: TextStyle(
