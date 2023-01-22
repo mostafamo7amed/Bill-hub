@@ -1,6 +1,7 @@
 import 'package:bill_hub/app/modules/vendor/create_account/vendor_registration_cubit/cubit.dart';
 import 'package:bill_hub/app/modules/vendor/create_account/vendor_registration_cubit/states.dart';
 import 'package:bill_hub/app/modules/vendor/home/home_vendor_view.dart';
+import 'package:bill_hub/app/modules/vendor/invoice/invoice_cubit/cubit.dart';
 import 'package:bill_hub/app/resources/strings_manager.dart';
 import 'package:bill_hub/shared/network/local/cache_helper.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
@@ -28,6 +29,7 @@ class CreateVendorAccount extends StatelessWidget {
         listener: (context, state) {
           if(state is CreateVendorSuccessState){
             CacheHelper.saveData(key: 'uid', data: state.id);
+            InvoiceCubit.getCubit(context).setNewUserSales(userId: state.id);
             navigateAndFinish(context, HomeVendorView());
           }
         },
@@ -221,7 +223,6 @@ class CreateVendorAccount extends StatelessWidget {
                               if(formKey.currentState!.validate()&&cubit.services!=null&&cubit.companyType!=null){
                                 int index= int.parse(cubit.services!);
                                 int index2= int.parse(cubit.companyType!);
-
                                 cubit.createVendorAccount(
                                     userType: 'Vendor',
                                     email: email,

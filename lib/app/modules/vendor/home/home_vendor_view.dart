@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../shared/components/component.dart';
 import '../../../../styles/icons_broken.dart';
+import '../../../model/vendor.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/font_manager.dart';
@@ -15,7 +16,6 @@ import '../../login/login_view.dart';
 import '../analysis/analysis.dart';
 import '../chat/chat_view.dart';
 import '../complaint/complaint.dart';
-import '../edit_profile/edit_vendor_account.dart';
 import '../invoice/invoice_cubit/cubit.dart';
 import '../invoice/invoice_cubit/states.dart';
 import '../invoice/invoice_view.dart';
@@ -27,7 +27,14 @@ class HomeVendorView extends StatelessWidget {
   Widget build(BuildContext context) {
     InvoiceCubit.getCubit(context).getVendorData(CacheHelper.getData(key: 'uid'));
     return BlocConsumer<InvoiceCubit,InvoiceStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is GetVendorSuccessState){
+          var userModel = InvoiceCubit.getCubit(context).vendorModel!;
+          if(userModel.isBlocked!){
+            showAlertDialog(userModel, context);
+          }
+        }
+      },
       builder: (context, state) {
         var cubit  = InvoiceCubit.getCubit(context);
         return Scaffold(
@@ -314,4 +321,74 @@ class HomeVendorView extends StatelessWidget {
       },
     );
   }
+  Future showAlertDialog(Vendor model,context) => showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "تنبية",
+                style: getBoldStyle(
+                    color: ColorManager.darkGray, fontSize: 18),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${model.blockReason}',
+                    style: getSemiBoldStyle(
+                        color: ColorManager.darkGray, fontSize: 12),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        backgroundColor:
+                        MaterialStatePropertyAll(ColorManager.primary)),
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                      CacheHelper.removeData(key: 'uid');
+                      uid = '';
+                      print(CacheHelper.getData(key: 'uid'));
+                      navigateAndFinish(context, LoginView());
+                    },
+                    child: Text(
+                      "خروج",
+                      style: getRegularStyle(color: ColorManager.white),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

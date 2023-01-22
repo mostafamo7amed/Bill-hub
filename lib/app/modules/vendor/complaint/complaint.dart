@@ -1,4 +1,10 @@
+import 'package:bill_hub/app/model/complaint.dart';
+import 'package:bill_hub/app/modules/vendor/invoice/invoice_cubit/cubit.dart';
+import 'package:bill_hub/app/modules/vendor/invoice/invoice_cubit/states.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../shared/components/component.dart';
 import '../../../resources/assets_manager.dart';
@@ -6,142 +12,222 @@ import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
 import 'complaint_details_view.dart';
 
-class VendorComplaint extends StatelessWidget {
+class VendorComplaint extends StatefulWidget {
   VendorComplaint({Key? key}) : super(key: key);
-  var titleController =TextEditingController();
-  var descriptionController =TextEditingController();
+
+  @override
+  State<VendorComplaint> createState() => _VendorComplaintState();
+}
+
+class _VendorComplaintState extends State<VendorComplaint> {
+  var titleController = TextEditingController();
+  var descriptionController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+  var now = new DateTime.now();
+  var formatter = new DateFormat('yyyy-MM-dd');
+
+  @override
+  void initState() {
+    InvoiceCubit.getCubit(context).GetVendorComplaint();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'الشكاوي',
-            style: getSemiBoldStyle(color: ColorManager.white, fontSize: 20),
-          ),
-        ),
-        body: Column(children: [
-          const SizedBox(
-            width: double.infinity,
-            child: TabBar(
-              labelColor: Colors.red,
-              isScrollable: true,
-              unselectedLabelColor: Colors.black,
-              indicatorColor: Colors.red,
-              indicatorPadding: EdgeInsets.all(15),
-              physics: BouncingScrollPhysics(),
-              tabs: [
-                Tab(text: "إضافة شكوي"),
-                Tab(text: "متابعة شكوي"),
+    return BlocConsumer<InvoiceCubit, InvoiceStates>(
+      listener: (context, state) {
+        if(state is AddComplaintSuccessState){
+        }
+      },
+      builder: (context, state) {
+        return DefaultTabController(
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'الشكاوي',
+                style:
+                    getSemiBoldStyle(color: ColorManager.white, fontSize: 20),
+              ),
+            ),
+            body: Column(
+              children: [
+                const SizedBox(
+                  width: double.infinity,
+                  child: TabBar(
+                    labelColor: Colors.red,
+                    isScrollable: true,
+                    unselectedLabelColor: Colors.black,
+                    indicatorColor: Colors.red,
+                    indicatorPadding: EdgeInsets.all(15),
+                    physics: BouncingScrollPhysics(),
+                    tabs: [
+                      Tab(text: "إضافة شكوي"),
+                      Tab(text: "متابعة شكوي"),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child:
+                        TabBarView(physics: BouncingScrollPhysics(), children: [
+                      addNewComplaint(context),
+                      ConditionalBuilder(
+                        condition: InvoiceCubit.getCubit(context).allVendorComplaint.isNotEmpty,
+                        builder: (context) => viewComplaint(context),
+                        fallback: (context) => Center(
+                          child: Text(
+                            'لا توجد شكاوي حاليا',
+                            style: getSemiBoldStyle(
+                                color: ColorManager.black, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
               ],
             ),
           ),
-          Expanded(
-            child: SizedBox(
-              width: double.infinity,
-              child: TabBarView(
-                physics: BouncingScrollPhysics(),
-                  children: [addNewComplaint(context), viewComplaint(context)]),
-            ),
-          ),
-        ],),
-      ),
+        );
+      },
     );
   }
 
-  Widget addNewComplaint(context) => SingleChildScrollView(
-    physics: BouncingScrollPhysics(),
-    child: Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Form(
-        key: formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            defaultFormField(
-                controller: titleController,
-                label: ' عنوان المشكلة ',
-                validate: (value) {
-                  if(value.isEmpty){
-                    return 'من فضلك ادخل عنوان المشكلة ';
-                  }
-                  return null;
-                },
-                type: TextInputType.text,
-                context: context),
-            SizedBox(height: 10,),
-            TextFormField(
-              controller: descriptionController,
-              maxLines: null,
-              style: getRegularStyle(color: ColorManager.black,fontSize: 16),
-              decoration:InputDecoration(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: 8, vertical: 5),
-                label:Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Text(' وصف المشكلة ',
-                      style: getRegularStyle(color: ColorManager.black, fontSize: 16)),
+  Widget addNewComplaint(context) => BlocConsumer<InvoiceCubit, InvoiceStates>(
+        listener: (context, state) {
+          if (state is AddComplaintSuccessState) {
+            titleController.text = '';
+            descriptionController.text = '';
+            InvoiceCubit.getCubit(context).GetVendorComplaint();
+            toast(message: 'تم إرسال الشكوي', data: ToastStates.success);
+          }
+        },
+        builder: (context, state) {
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    defaultFormField(
+                        controller: titleController,
+                        label: ' عنوان المشكلة ',
+                        validate: (value) {
+                          if (value.isEmpty) {
+                            return 'من فضلك ادخل عنوان المشكلة ';
+                          }
+                          return null;
+                        },
+                        type: TextInputType.text,
+                        context: context),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      controller: descriptionController,
+                      maxLines: null,
+                      style: getRegularStyle(
+                          color: ColorManager.black, fontSize: 16),
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        label: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Text(' وصف المشكلة ',
+                              style: getRegularStyle(
+                                  color: ColorManager.black, fontSize: 16)),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'من فضلك ادخل وصف المشكلة ';
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.text,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(ColorManager.primary),
+                          shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)))),
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          InvoiceCubit.getCubit(context).AddComplaint(
+                              title: titleController.text,
+                              description: descriptionController.text,
+                              date: formatter.format(now));
+                        }
+                      },
+                      child: ConditionalBuilder(
+                        condition: state is! AddComplaintLoadingState,
+                        builder: (context) => Text(
+                          "إضافة الشكوي",
+                          style: getRegularStyle(
+                              color: ColorManager.white, fontSize: 16),
+                        ),
+                        fallback: (context) => const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                border: OutlineInputBorder(
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(10.0)),
+              ),
+            ),
+          );
+        },
+      );
+
+  Widget viewComplaint(context) => BlocConsumer<InvoiceCubit, InvoiceStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          var cubit = InvoiceCubit.getCubit(context);
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return ComplaintItemBuilder(
+                        cubit.allVendorComplaint[index], context);
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 2,
+                  ),
+                  itemCount: cubit.allVendorComplaint.length,
                 ),
-              ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'من فضلك ادخل وصف المشكلة ';
-                }
-                return null;
-              },
-              keyboardType: TextInputType.text,
+              ],
             ),
-            SizedBox(height: 10,),
-            TextButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(ColorManager.primary),
-                  shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-              ),
-              onPressed: () {
-                //ToDo view user
-              },
-              child: Text(
-                "إضافة الشكوي",
-                style: getRegularStyle(color: ColorManager.white, fontSize: 16),
-              ),
-            )
-          ],
-        ),
-      ),
-    ),
-  );
+          );
+        },
+      );
 
-  Widget viewComplaint(context) => SingleChildScrollView(
-    scrollDirection: Axis.vertical,
-    physics: const BouncingScrollPhysics(),
-    child: Column(
-      children: [
-        ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return ComplaintItemBuilder(context);
-            },
-            separatorBuilder: (context, index) => const SizedBox(
-              height: 2,
-            ),
-            itemCount: 1 // todo list students
-        ),
-      ],
-    ),
-  );
-
-  Widget ComplaintItemBuilder(context) {
+  Widget ComplaintItemBuilder(Complaint complaint, context) {
     return InkWell(
       onTap: () {
-        navigateTo(context, ComplaintVendorDetailsView());
+        navigateTo(context, ComplaintVendorDetailsView(complaint));
       },
       child: Padding(
         padding: const EdgeInsets.only(
@@ -155,7 +241,11 @@ class VendorComplaint extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Image.asset(ImageAssets.complaint,width: 40,height: 40,),
+                  child: Image.asset(
+                    ImageAssets.complaint,
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -165,7 +255,7 @@ class VendorComplaint extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "عنوان الشكوي",
+                          "${complaint.title}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: getSemiBoldStyle(
@@ -176,14 +266,24 @@ class VendorComplaint extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  "لم يتم الرد",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: getSemiBoldStyle(
-                      color: ColorManager.gray, fontSize: 14),
+                complaint.status!
+                    ? Text(
+                        "تم الرد",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: getSemiBoldStyle(
+                            color: ColorManager.gray, fontSize: 14),
+                      )
+                    : Text(
+                        "لم يتم الرد",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: getSemiBoldStyle(
+                            color: ColorManager.gray, fontSize: 14),
+                      ),
+                SizedBox(
+                  width: 10,
                 ),
-                SizedBox(width: 10,),
               ],
             )),
       ),

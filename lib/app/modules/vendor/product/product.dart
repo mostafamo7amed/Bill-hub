@@ -54,11 +54,7 @@ class _ProductViewState extends State<ProductView> {
                   height: 3,
                 ),
                 itemCount: cubit.allVendorProducts.length),
-            fallback: (context) => Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 3,
-                backgroundColor: ColorManager.primary,
-              ),
+            fallback: (context) => Center(child: Text('لا توجد منتجات حاليا',style: getSemiBoldStyle(color: ColorManager.black,fontSize: 16),)
             ),
           ),
           floatingActionButton: FloatingActionButton(

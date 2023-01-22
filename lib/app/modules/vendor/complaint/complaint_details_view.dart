@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
-import '../../../../styles/icons_broken.dart';
+import '../../../model/complaint.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
 
 class ComplaintVendorDetailsView extends StatelessWidget {
-  ComplaintVendorDetailsView({Key? key}) : super(key: key);
+  Complaint complaint;
+  ComplaintVendorDetailsView(this.complaint,{Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,70 +17,82 @@ class ComplaintVendorDetailsView extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "عنوان الشكوي",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.darkGray, fontSize: 14),
-                          ),
-                          Text(
-                            "شكوي متعلقة بعملية الدفع",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.black, fontSize: 16),
-                          ),
-                        ],
+        child: Container(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "عنوان الشكوي",
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.darkGray, fontSize: 14),
+                            ),
+                            Text(
+                              "${complaint.title}",
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.black, fontSize: 16),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "نص الشكوي",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.darkGray, fontSize: 14),
-                          ),
-                          Text(
-                            "اثناء عملية الدفع ختسايسىيسشاشبشبتشابنشابشىب",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.black, fontSize: 16),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "نص الشكوي",
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.darkGray, fontSize: 14),
+                            ),
+                            Text(
+                              "${complaint.description}",
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.black, fontSize: 16),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "رد المسؤول",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.darkGray, fontSize: 14),
-                          ),
-                          Text(
-                            "لم يتم الرد",
-                            style: getSemiBoldStyle(
-                                color: ColorManager.black, fontSize: 16),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "رد المسؤول",
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.darkGray, fontSize: 14),
+                            ),
+                            complaint.status!
+                                ? Text(
+                              "${complaint.reply}",
+                              maxLines: null,
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.black, fontSize: 16),
+                            )
+                                : Text(
+                              "لم يتم الرد بعد",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.gray, fontSize: 14),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                )),
-          ],
+                    ],
+                  )),
+            ],
+          ),
         ),
       ),
     );

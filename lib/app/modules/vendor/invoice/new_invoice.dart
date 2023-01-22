@@ -36,6 +36,9 @@ class NewInvoiceView extends StatelessWidget {
           cubit.expDate = '';
           cubit.removeAllProductToList();
           cubit.GetAllVendorInvoice();
+          var formatter = new DateFormat('MMMM');
+          String month = formatter. format(now);
+          cubit.updateSales(month: month.substring(0,3));
           Navigator.pop(context);
         }
       },
@@ -347,6 +350,7 @@ class NewInvoiceView extends StatelessWidget {
                                 cubit.customerProducts);
                             await cubit.generatePDF(
                                 invoice, true, '${formatter.format(now)}');
+
                           }
                         },
                         child: ConditionalBuilder(

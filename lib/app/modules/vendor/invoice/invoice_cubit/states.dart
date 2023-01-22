@@ -47,5 +47,20 @@ class GetAllInvoiceLoadingState extends InvoiceStates{}
 class GetAllInvoiceSuccessState extends InvoiceStates{}
 class GetAllInvoiceErrorState extends InvoiceStates{}
 
+class AddComplaintLoadingState extends InvoiceStates{}
+class AddComplaintSuccessState extends InvoiceStates{}
+class AddComplaintErrorState extends InvoiceStates{}
+
+class GetComplaintLoadingState extends InvoiceStates{}
+class GetComplaintSuccessState extends InvoiceStates{}
+class GetComplaintErrorState extends InvoiceStates{}
+
 class GetProductPriceLoadingState extends InvoiceStates{}
 class GetProductPriceSuccessState extends InvoiceStates{}
+
+class SetAnalysisSuccessState extends InvoiceStates{}
+class SetAnalysisErrorState extends InvoiceStates{}
+class GetAnalysisErrorState extends InvoiceStates{}
+class GetAnalysisSuccessState extends InvoiceStates{}
+class UpdateAnalysisSuccessState extends InvoiceStates{}
+class UpdateAnalysisErrorState extends InvoiceStates{}

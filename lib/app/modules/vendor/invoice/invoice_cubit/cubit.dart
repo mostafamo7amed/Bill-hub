@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:bill_hub/app/model/complaint.dart';
 import 'package:bill_hub/app/model/invoice.dart';
 import 'package:bill_hub/app/model/product.dart';
 import 'package:bill_hub/app/model/vendor.dart';
@@ -12,6 +13,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../../model/analysis.dart';
 import '../../../../model/invoice_item.dart';
 import '../invoice_build_components.dart';
 
@@ -29,7 +31,6 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
   String customerPhone = '';
   List<Product> customerProducts = [];
   double total = 0.0;
-  List<String> items = ['لاب توب', 'أيفون'];
   String? value;
 
   change1(bool status) {
@@ -69,6 +70,7 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     calculateAmount();
     emit(InvoiceRemoveProductToListState());
   }
+
   removeAllProductToList() {
     customerProducts.clear();
     calculateAmount();
@@ -83,12 +85,13 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     });
     emit(InvoiceCalculateAmountState());
   }
+
   double? price;
   getProductPrice(String productName) {
     emit(GetProductPriceLoadingState());
     allVendorProducts.forEach((element) {
-      if(element.name == productName){
-        price =element.price;
+      if (element.name == productName) {
+        price = element.price;
         emit(GetProductPriceSuccessState());
       }
     });
@@ -99,7 +102,8 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     emit(Invoice3State());
   }
 
-  Future<File> generatePDF(Invoice invoice,bool uploadFile,String createDate) async {
+  Future<File> generatePDF(
+      Invoice invoice, bool uploadFile, String createDate) async {
     final pdf = Document();
     pdf.addPage(
       MultiPage(
@@ -119,16 +123,18 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
         footer: (context) => buildFooter(invoice),
       ),
     );
-    return await savePDF(invoice.invoiceId!,'${invoice.invoiceId}.pdf', pdf,uploadFile,createDate);
+    return await savePDF(invoice.invoiceId!, '${invoice.invoiceId}.pdf', pdf,
+        uploadFile, createDate);
   }
 
-  Future<File> savePDF(String invoiceId,String fileName, Document pdf,bool uploadFile,createDate) async {
+  Future<File> savePDF(String invoiceId, String fileName, Document pdf,
+      bool uploadFile, createDate) async {
     final bytes = await pdf.save();
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/$fileName');
     file.writeAsBytes(bytes);
-    if(uploadFile==true){
-      uploadInvoice(file,invoiceId,createDate);
+    if (uploadFile == true) {
+      uploadInvoice(file, invoiceId, createDate);
     }
     return file;
   }
@@ -138,8 +144,8 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     await OpenFilex.open(url);
   }
 
-  String? fileURl ;
-  uploadInvoice(file,String invoiceNumber,createDate) {
+  String? fileURl;
+  uploadInvoice(file, String invoiceNumber, createDate) {
     emit(UploadInvoiceLoadingState());
     FirebaseStorage.instance
         .ref()
@@ -168,10 +174,6 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     });
   }
 
-
-
-
-
   Vendor? vendorModel;
   void getVendorData(String uid) {
     emit(GetVendorLoadingState());
@@ -195,7 +197,7 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
   }) async {
     emit(AddProductLoadingState());
     String productId = await generateRandomString(25);
-    Product product = Product(productId, name, price, amount,false);
+    Product product = Product(productId, name, price, amount, false);
     FirebaseFirestore.instance
         .collection('All Products')
         .doc(vendorModel!.uid)
@@ -211,8 +213,7 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
 
   List<Product> allVendorProducts = [];
   List<String> allProducts = [];
-  GetVendorProducts(
-  ) {
+  GetVendorProducts() {
     emit(GetProductLoadingState());
     allVendorProducts = [];
     allProducts = [];
@@ -237,7 +238,8 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     required bool hide,
     required int index,
   }) {
-    Product product = Product(productId, allVendorProducts[index].name, allVendorProducts[index].price, allVendorProducts[index].amount, hide);
+    Product product = Product(productId, allVendorProducts[index].name,
+        allVendorProducts[index].price, allVendorProducts[index].amount, hide);
     FirebaseFirestore.instance
         .collection('All Products')
         .doc(vendorModel!.uid)
@@ -259,7 +261,7 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     required int amount,
   }) async {
     emit(EditProductLoadingState());
-    Product product = Product(productId, name, price, amount,hide);
+    Product product = Product(productId, name, price, amount, hide);
     FirebaseFirestore.instance
         .collection('All Products')
         .doc(vendorModel!.uid)
@@ -273,9 +275,6 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     });
   }
 
-
-
-
   CreateInvoice({
     required String invoiceNumber,
     required String creationDate,
@@ -288,7 +287,16 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
   }) async {
     emit(CreateInvoiceLoadingState());
     String InvoiceId = await generateRandomString(25);
-    InvoiceItem invoiceItem = InvoiceItem(invoiceNumber, InvoiceId, creationDate, endDate, vendorId, fileUrl, buyerName, buyerPhone, isPaid);
+    InvoiceItem invoiceItem = InvoiceItem(
+        invoiceNumber,
+        InvoiceId,
+        creationDate,
+        endDate,
+        vendorId,
+        fileUrl,
+        buyerName,
+        buyerPhone,
+        isPaid);
     FirebaseFirestore.instance
         .collection('All Invoices')
         .doc(InvoiceId)
@@ -300,15 +308,13 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     });
   }
 
-
-
-  List<InvoiceItem> allVendorInvoices =[];
+  List<InvoiceItem> allVendorInvoices = [];
   GetAllVendorInvoice() {
-    allVendorInvoices =[];
+    allVendorInvoices = [];
     emit(GetAllInvoiceLoadingState());
     FirebaseFirestore.instance
         .collection('All Invoices')
-        .where('vendorId',isEqualTo: vendorModel!.uid)
+        .where('vendorId', isEqualTo: vendorModel!.uid)
         .get()
         .then((value) {
       for (var element in value.docs) {
@@ -320,18 +326,110 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     });
   }
 
+  AddComplaint({
+    required String title,
+    required String description,
+    required String date,
+  }) async {
+    emit(AddComplaintLoadingState());
+    String complaintId = await generateRandomString(25);
+    Complaint complaint = Complaint(complaintId, title, vendorModel!.name,
+        'Vendor', description, false, '', date, vendorModel!.uid);
+    FirebaseFirestore.instance
+        .collection('All Complaints')
+        .doc(complaintId)
+        .set(complaint.toMap()!)
+        .then((value) {
+      emit(AddComplaintSuccessState());
+    }).catchError((e) {
+      emit(AddComplaintErrorState());
+    });
+  }
 
+  List<Complaint> allVendorComplaint = [];
+  GetVendorComplaint() {
+    allVendorComplaint = [];
+    emit(GetComplaintLoadingState());
+    FirebaseFirestore.instance
+        .collection('All Complaints')
+        .where('userId', isEqualTo: vendorModel!.uid)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        allVendorComplaint.add(Complaint.fromMap(element.data()));
+      }
+      emit(GetComplaintSuccessState());
+    }).catchError((e) {
+      emit(GetComplaintErrorState());
+    });
+  }
 
+  void setNewUserSales({required String userId}) {
+    Map<String, int> data = {
+      'Jan': 0,
+      'Feb': 0,
+      'Mar': 0,
+      'Apr': 0,
+      'May': 0,
+      'Jun': 0,
+      'Jul': 0,
+      'Aug': 0,
+      'Sep': 0,
+      'Oct': 0,
+      'Nov': 0,
+      'Dec': 0,
+    };
+    FirebaseFirestore.instance
+        .collection('Analysis')
+        .doc(userId)
+        .set(data)
+        .then((value) {
+      emit(SetAnalysisSuccessState());
+    }).catchError((e) {
+      emit(SetAnalysisErrorState());
 
+    });
+  }
 
+  List<Sales> allSales = [];
+  void GetSales() {
+    FirebaseFirestore.instance
+        .collection('Analysis')
+        .doc(vendorModel!.uid)
+        .get()
+        .then((value) {
+      allSales.add(Sales.fromMap(value.data()!));
+      emit(GetAnalysisSuccessState());
+    }).catchError((e) {
+      emit(GetAnalysisErrorState());
+    });
+  }
 
+  int getMonthSales(String month) {
+    int monthSales=0;
+    allSales.forEach((element) {
+      if (element.month == month) {
+        monthSales = element.numOfSales!;
+      }
+    });
+    return monthSales;
+  }
 
-
-
-
-
-
-
+  void updateSales({
+    required String month,
+  }) {
+    int newValue = getMonthSales(month);
+    Sales sales = Sales(month, newValue++);
+    FirebaseFirestore.instance
+        .collection('Analysis')
+        .doc(vendorModel!.uid)
+        .update(sales.toMap()!)
+        .then((value) {
+      emit(UpdateAnalysisSuccessState());
+    }).catchError((e) {
+      emit(UpdateAnalysisErrorState());
+    });
+  }
 
   String generateRandomString(int len) {
     var r = Random();
