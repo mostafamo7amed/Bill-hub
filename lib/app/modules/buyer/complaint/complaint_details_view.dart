@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../../model/complaint.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
 
 class ComplaintBuyerDetailsView extends StatelessWidget {
-  ComplaintBuyerDetailsView({Key? key}) : super(key: key);
+  Complaint complaint;
+  ComplaintBuyerDetailsView(this.complaint,{Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,7 @@ class ComplaintBuyerDetailsView extends StatelessWidget {
                                 color: ColorManager.darkGray, fontSize: 14),
                           ),
                           Text(
-                            "شكوي متعلقة بعملية الدفع",
+                            "${complaint.title}",
                             style: getSemiBoldStyle(
                                 color: ColorManager.black, fontSize: 16),
                           ),
@@ -51,7 +53,7 @@ class ComplaintBuyerDetailsView extends StatelessWidget {
                                 color: ColorManager.darkGray, fontSize: 14),
                           ),
                           Text(
-                            "اثناء عملية الدفع ختسايسىيسشاشبشبتشابنشابشىب",
+                            "${complaint.description}",
                             style: getSemiBoldStyle(
                                 color: ColorManager.black, fontSize: 16),
                           ),
@@ -68,10 +70,19 @@ class ComplaintBuyerDetailsView extends StatelessWidget {
                             style: getSemiBoldStyle(
                                 color: ColorManager.darkGray, fontSize: 14),
                           ),
-                          Text(
-                            "لم يتم الرد",
+                          complaint.status!
+                              ? Text(
+                            "${complaint.reply}",
+                            maxLines: null,
                             style: getSemiBoldStyle(
                                 color: ColorManager.black, fontSize: 16),
+                          )
+                              : Text(
+                            "لم يتم الرد بعد",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: getSemiBoldStyle(
+                                color: ColorManager.gray, fontSize: 14),
                           ),
                         ],
                       ),

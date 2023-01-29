@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../shared/network/local/cache_helper.dart';
 import '../../../../model/admin.dart';
+import '../../../../model/complaint.dart';
+import '../../../../model/invoice_item.dart';
 
 
 class AdminCubit extends Cubit<AdminStates> {
@@ -67,6 +69,80 @@ class AdminCubit extends Cubit<AdminStates> {
         emit(ChangeUserStatusErrorState());
       });
 
+  }
+
+  List<Complaint> allComplaint = [];
+  GetAllComplaint() {
+    allComplaint = [];
+    emit(GetComplaintLoadingState());
+    FirebaseFirestore.instance
+        .collection('All Complaints')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        allComplaint.add(Complaint.fromMap(element.data()));
+      }
+      emit(GetComplaintSuccessState());
+    }).catchError((e) {
+      emit(GetComplaintErrorState());
+    });
+  }
+
+  replyComplaint({
+    required String reply,
+    required int index,
+}) {
+    Complaint complaint = Complaint(
+        allComplaint[index].id,  allComplaint[index].title,  allComplaint[index].userName,
+        allComplaint[index].userType,  allComplaint[index].description, true, reply,
+        allComplaint[index].date,  allComplaint[index].userId);
+    emit(UpdateComplaintLoadingState());
+    FirebaseFirestore.instance
+        .collection('All Complaints')
+        .doc(allComplaint[index].id)
+        .update(complaint.toMap()!)
+        .then((value) {
+      emit(UpdateComplaintSuccessState());
+    }).catchError((e) {
+      emit(UpdateComplaintErrorState());
+    });
+  }
+
+  List<InvoiceItem> allInvoices = [];
+  List<InvoiceItem> allPaidInvoices = [];
+  GetAllInvoice() {
+    allInvoices = [];
+    allPaidInvoices=[];
+    emit(GetAllInvoiceLoadingState());
+    FirebaseFirestore.instance
+        .collection('All Invoices')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        if(InvoiceItem.fromMap(element.data()).isPaid!){
+          allPaidInvoices.add(InvoiceItem.fromMap(element.data()));
+        }else{
+          allInvoices.add(InvoiceItem.fromMap(element.data()));
+        }
+      }
+      emit(GetAllInvoiceSuccessState());
+    }).catchError((e) {
+      emit(GetAllInvoiceErrorState());
+    });
+  }
+
+  List<InvoiceItem> searchList=[];
+  List<InvoiceItem> searchPaidList=[];
+  void search(String value){
+    searchList = allInvoices.where((element) {
+      String number = element.invoiceNumber!.toLowerCase();
+      return number.contains(value.toLowerCase());
+    }).toList();
+    searchPaidList = allPaidInvoices.where((element) {
+      String number = element.invoiceNumber!.toLowerCase();
+      return number.contains(value.toLowerCase());
+    }).toList();
+    emit(ChangeSearchListState());
   }
 
   removeVendor(index) {

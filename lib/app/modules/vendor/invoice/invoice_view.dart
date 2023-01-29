@@ -89,7 +89,7 @@ class _InvoiceVendorViewState extends State<InvoiceVendorView> {
       onTap: () {
         navigateTo(
           context,
-          ViewInvoicePdf(invoiceItem.fileUrl!));
+          ViewInvoicePdf(invoiceItem.fileUrl!,false));
       },
       child: Padding(
         padding: const EdgeInsets.only(

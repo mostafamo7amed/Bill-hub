@@ -1,35 +1,74 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../shared/components/component.dart';
+import '../../../model/users.dart';
+import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
+import '../../chat_bloc/cubit.dart';
+import '../../chat_bloc/states.dart';
+import '../home/buyer_cubit/cubit.dart';
 import 'chats_details_view.dart';
 
-class ChatBuyerView extends StatelessWidget {
+class ChatBuyerView extends StatefulWidget {
   const ChatBuyerView({Key? key}) : super(key: key);
 
   @override
+  State<ChatBuyerView> createState() => _ChatBuyerViewState();
+}
+
+class _ChatBuyerViewState extends State<ChatBuyerView> {
+
+  @override
+  void initState() {
+    ChatCubit.getCubit(context)
+        .getAllUsers(userId: BuyerCubit.getCubit(context).buyerModel!.uid!);
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'المحادثات',
-          style: getSemiBoldStyle(color: ColorManager.white, fontSize: 20),
-        ),
-      ),
-      body: ListView.separated(
-        physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) =>
-              buildChatItem(context),
-          separatorBuilder: (context, index) => const SizedBox(
-            height: 5,
+    return BlocConsumer<ChatCubit,ChatStates>(
+      listener: (context, state) {
+
+      },
+      builder: (context, state) {
+        var cubit = ChatCubit.getCubit(context);
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'المحادثات',
+              style: getSemiBoldStyle(color: ColorManager.white, fontSize: 20),
+            ),
           ),
-          itemCount: 10),
+          body: ConditionalBuilder(
+            condition: cubit.users.isNotEmpty,
+            builder: (context) =>ListView.separated(
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, index) =>
+                    buildChatItem(cubit.users[index],context),
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 5,
+                ),
+                itemCount: cubit.users.length),
+            fallback: (context) => Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                backgroundColor: Colors.white,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
-  Widget buildChatItem( context) => InkWell(
+
+  Widget buildChatItem(Users model, context) => InkWell(
     onTap: () {
-      navigateTo(context, ChatsDetailsBuyerView());
+      navigateTo(
+          context,
+          ChatsDetailsBuyerView(
+              model, BuyerCubit.getCubit(context).buyerModel!.uid!));
     },
     child: Padding(
       padding: const EdgeInsets.all(8.0),
@@ -37,7 +76,7 @@ class ChatBuyerView extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 25,
-            //backgroundImage: NetworkImage('${model.image}'),
+            backgroundImage: AssetImage(ImageAssets.photo),
           ),
           const SizedBox(
             width: 10,
@@ -47,7 +86,7 @@ class ChatBuyerView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'احمد علي',
+                  '${model.name}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: getSemiBoldStyle(color: ColorManager.black,fontSize: 18

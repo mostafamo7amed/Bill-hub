@@ -431,6 +431,36 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     });
   }
 
+
+
+  List<InvoiceItem> allInvoiceForVisitor = [];
+  GetAllInvoice() {
+    allInvoiceForVisitor = [];
+    FirebaseFirestore.instance
+        .collection('All Invoices')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        allInvoiceForVisitor.add(InvoiceItem.fromMap(element.data()));
+      }
+      emit(GetAllInvoiceSuccessState());
+    }).catchError((e) {
+      emit(GetAllInvoiceErrorState());
+    });
+  }
+
+  InvoiceItem? search(String value){
+    InvoiceItem? x;
+    allInvoiceForVisitor.forEach((element) {
+      if(element.invoiceNumber==value){
+        print('${element.invoiceNumber}');
+        x = element;
+      }
+    });
+    emit(ChangeSearchListState());
+    return x;
+  }
+
   String generateRandomString(int len) {
     var r = Random();
     const _chars =

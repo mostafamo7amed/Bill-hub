@@ -64,3 +64,5 @@ class GetAnalysisErrorState extends InvoiceStates{}
 class GetAnalysisSuccessState extends InvoiceStates{}
 class UpdateAnalysisSuccessState extends InvoiceStates{}
 class UpdateAnalysisErrorState extends InvoiceStates{}
+
+class ChangeSearchListState extends InvoiceStates{}

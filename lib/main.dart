@@ -6,8 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
 import 'app/modules/admin/home/home_cubit/cubit.dart';
+import 'app/modules/buyer/home/buyer_cubit/cubit.dart';
 import 'app/modules/chat_bloc/cubit.dart';
 import 'app/modules/vendor/invoice/invoice_build_components.dart';
 import 'app/resources/routes_manager.dart';
@@ -30,8 +30,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => InvoiceCubit(),),
-        BlocProvider(create: (context) => AdminCubit()..getUser()..getVendor(),),
+        BlocProvider(create: (context) => AdminCubit()..getUser()..getVendor()..GetAllComplaint()..GetAllInvoice(),),
         BlocProvider(create: (context) => ChatCubit(),),
+        BlocProvider(create: (context) => BuyerCubit(),),
       ],
       child: MaterialApp(
         localizationsDelegates: [

@@ -1,6 +1,6 @@
+import 'package:bill_hub/app/modules/vendor/invoice/invoice_cubit/cubit.dart';
 import 'package:bill_hub/app/modules/visitor/visitor_pay_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../../../shared/components/component.dart';
 import '../../../styles/icons_broken.dart';
 import '../../resources/assets_manager.dart';
@@ -9,8 +9,19 @@ import '../../resources/strings_manager.dart';
 import '../../resources/styles_manager.dart';
 
 
-class VisitorView extends StatelessWidget {
+class VisitorView extends StatefulWidget {
   VisitorView({Key? key}) : super(key: key);
+
+  @override
+  State<VisitorView> createState() => _VisitorViewState();
+}
+
+class _VisitorViewState extends State<VisitorView> {
+  @override
+  void initState() {
+    InvoiceCubit.getCubit(context).GetAllInvoice();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
