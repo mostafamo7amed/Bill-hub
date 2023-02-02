@@ -164,10 +164,10 @@ class InvoiceBuyerView extends StatelessWidget {
                         if (searchController.text.isNotEmpty &&
                             cubit.searchList.isNotEmpty) {
                           return BillItemBuilder(
-                              cubit.searchList[index], context);
+                              cubit.searchList[index], context,index);
                         } else {
                           return BillItemBuilder(
-                              cubit.allBuyerInvoices[index], context);
+                              cubit.allBuyerInvoices[index], context,index);
                         }
                       },
                       separatorBuilder: (context, index) => const SizedBox(
@@ -216,10 +216,10 @@ class InvoiceBuyerView extends StatelessWidget {
                     if (searchController.text.isNotEmpty &&
                         cubit.searchPaidList.isNotEmpty) {
                       return BillItemBuilder(
-                          cubit.searchPaidList[index], context);
+                          cubit.searchPaidList[index], context,index);
                     } else {
                       return BillItemBuilder(
-                          cubit.allBuyerPaidInvoices[index], context);
+                          cubit.allBuyerPaidInvoices[index], context,index);
                     }
                   },
                   separatorBuilder: (context, index) => const SizedBox(
@@ -235,10 +235,10 @@ class InvoiceBuyerView extends StatelessWidget {
     );
   }
 
-  Widget BillItemBuilder(InvoiceItem invoiceItem, context) {
+  Widget BillItemBuilder(InvoiceItem invoiceItem, context,index) {
     return InkWell(
       onTap: () {
-        navigateTo(context, ViewInvoicePdf(invoiceItem.fileUrl!, true));
+        navigateTo(context, ViewInvoicePdf(invoiceItem.fileUrl!, true,'buyer',index,null));
       },
       child: Padding(
         padding: const EdgeInsets.only(

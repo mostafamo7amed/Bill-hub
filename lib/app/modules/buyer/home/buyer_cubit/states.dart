@@ -19,3 +19,7 @@ class GetAllInvoiceSuccessState extends BuyerStates{}
 class GetAllInvoiceErrorState extends BuyerStates{}
 
 class ChangeSearchListState extends BuyerStates{}
+
+class PayInvoiceLoadingState extends BuyerStates{}
+class PayInvoiceSuccessState extends BuyerStates{}
+class PayInvoiceErrorState extends BuyerStates{}

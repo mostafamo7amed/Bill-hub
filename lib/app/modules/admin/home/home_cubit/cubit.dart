@@ -143,6 +143,7 @@ class AdminCubit extends Cubit<AdminStates> {
       return number.contains(value.toLowerCase());
     }).toList();
     emit(ChangeSearchListState());
+
   }
 
   removeVendor(index) {

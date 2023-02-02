@@ -61,7 +61,7 @@ class _CustomerProductsState extends State<CustomerProducts> {
                               color: ColorManager.black, fontSize: 16),
                         ),
                         Text(
-                          '${InvoiceCubit.getCubit(context).total}',
+                          '${InvoiceCubit.getCubit(context).total} ريال',
                           style: getSemiBoldStyle(
                               color: ColorManager.black, fontSize: 16),
                         )

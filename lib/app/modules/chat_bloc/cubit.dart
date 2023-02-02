@@ -1,3 +1,4 @@
+import 'package:bill_hub/app/model/invoice_item.dart';
 import 'package:bill_hub/app/modules/chat_bloc/states.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,149 @@ class ChatCubit extends Cubit<ChatStates> {
   static ChatCubit getCubit(context) => BlocProvider.of(context);
 
   List<Users> users = [];
-  void getAllUsers({
+
+  /*void getChatUsers({
+     required userType,
+     userId,
+     buyerPhone,
+}){
+    users = [];
+    if(userType == "vendor"){
+      FirebaseFirestore.instance
+          .collection('All Invoices')
+          .where('vendorId', isEqualTo: userId)
+          .get()
+          .then((value) {
+        print('=============================== ${value.docs.length}');
+        for (var element in value.docs) {
+          FirebaseFirestore.instance.collection('Buyer')
+              .get().then((value1) {
+            for (var element2 in value1.docs) {
+              Buyer buyerModel = Buyer.fromMap(element2.data());
+              print('=============================== ${buyerModel.email}');
+              print('===============================buyer ${InvoiceItem.fromMap(element.data()).buyerPhone}');
+              if(InvoiceItem.fromMap(element.data()).buyerPhone==buyerModel.phone) {
+                users.add(Users(buyerModel.uid, buyerModel.name, 'Buyer',
+                    buyerModel.phone));
+                emit(ChatGetAllBuyerSuccessState());
+              }
+            }
+          });
+        }
+      }).catchError((e) {
+        emit(ChatGetAllUsersErrorState());
+      });
+    }else{
+      FirebaseFirestore.instance
+          .collection('All Invoices')
+          .where('buyerPhone', isEqualTo: buyerPhone)
+          .get()
+          .then((value) {
+        print('=============================== ${value.docs.length}');
+        for (var element in value.docs) {
+          FirebaseFirestore.instance.collection('Vendor')
+              .get().then((value1) {
+            for (var element2 in value1.docs) {
+              Vendor vendorModel = Vendor.fromMap(element2.data());
+              print('=============================== ${vendorModel.email}');
+              print('===============================buyer ${InvoiceItem.fromMap(element.data()).vendorId}');
+              if(InvoiceItem.fromMap(element.data()).vendorId==vendorModel.uid) {
+                users.add(Users(vendorModel.uid, vendorModel.name, 'Vendor',
+                    vendorModel.phone));
+                emit(ChatGetAllBuyerSuccessState());
+              }
+            }
+          });
+        }
+      }).catchError((e) {
+        emit(ChatGetAllUsersErrorState());
+      });
+    }
+
+  }*/
+
+
+  void getChat({
+    required userType,
+  required String userId,
+}){
+    emit(ChatGetAllUsersLoadingState());
+    users = [];
+    if(userType == 'Vendor'){
+      FirebaseFirestore.instance
+          .collection('Vendor')
+          .doc(userId)
+          .collection('Chats')
+          .get().then((value){
+        print('=============================== ${value.docs.toString()}');
+
+        for (var element in value.docs) {
+          print('=============================== ${element.id}');
+          FirebaseFirestore.instance.collection('Buyer')
+              .doc(element.id)
+              .get().then((value1) {
+            Buyer buyerModel = Buyer.fromMap(value1.data()!);
+            print('=============================== ${buyerModel.email}');
+            users.add(Users(
+                buyerModel.uid,
+                buyerModel.name,
+                'Buyer',
+                buyerModel.phone));
+            emit(ChatGetAllBuyerSuccessState());
+          });
+        }
+      }).catchError((e) {
+          emit(ChatGetAllUsersErrorState());
+      });
+    }else{
+      FirebaseFirestore.instance
+          .collection('Buyer')
+          .doc(userId)
+          .collection('Chats')
+          .get().then((value){
+        print('=============================== ${value.docs.toString()}');
+        for (var element in value.docs) {
+          print('=============================== ${element.id}');
+          FirebaseFirestore.instance.collection('Vendor')
+              .doc(element.id)
+              .get().then((value1) {
+            Vendor vendorModel = Vendor.fromMap(value1.data()!);
+            print('=============================== ${vendorModel.email}');
+            users.add(Users(
+                vendorModel.uid,
+                vendorModel.name,
+                'Vendor',
+                vendorModel.phone));
+            emit(ChatGetAllVendorsSuccessState());
+          });
+        }
+      }).catchError((e) {
+        emit(ChatGetAllUsersErrorState());
+      });
+    }
+  }
+
+
+
+  List<Users> vendorsList = [];
+  void getAllVendor(){
+    vendorsList = [];
+    FirebaseFirestore.instance.collection('Vendor')
+        .get().then((value1) {
+      for (var element2 in value1.docs) {
+        Vendor vendorModel = Vendor.fromMap(element2.data());
+        vendorsList.add(Users(vendorModel.uid, vendorModel.name, 'Vendor',
+              vendorModel.employment));
+          emit(ChatGetAllVendorChatSuccessState());
+        }
+    }).catchError((e){
+      emit(ChatGetAllVendorChatErrorState());
+    });
+  }
+
+
+
+  /*void getAllUsers({
     required String userId,
   }) {
     users = [];
@@ -46,7 +189,7 @@ class ChatCubit extends Cubit<ChatStates> {
     }).catchError((e) {
       emit(ChatGetAllUsersErrorState());
     });
-  }
+  }*/
 
   void sendMessage({
     required String receiverId,
@@ -67,8 +210,9 @@ class ChatCubit extends Cubit<ChatStates> {
           .collection('Vendor')
           .doc(senderId)
           .collection('Chats')
-          .doc(receiverId)
-          .collection('Messages')
+          .doc(receiverId)..set({
+        'typing':true
+      })..collection('Messages')
           .add(messageModel.toMap()!)
           .then((value) {
         emit(ChatSendMessageSuccessState());
@@ -79,8 +223,9 @@ class ChatCubit extends Cubit<ChatStates> {
           .collection(receiverType)
           .doc(receiverId)
           .collection('Chats')
-          .doc(senderId)
-          .collection('Messages')
+          .doc(senderId)..set({
+        'typing':true
+      })..collection('Messages')
           .add(messageModel.toMap()!)
           .then((value) {
         emit(ChatSendMessageSuccessState());
@@ -92,8 +237,9 @@ class ChatCubit extends Cubit<ChatStates> {
           .collection('Buyer')
           .doc(senderId)
           .collection('Chats')
-          .doc(receiverId)
-          .collection('Messages')
+          .doc(receiverId)..set({
+          'typing':true
+        })..collection('Messages')
           .add(messageModel.toMap()!)
           .then((value) {
         emit(ChatSendMessageSuccessState());
@@ -104,8 +250,9 @@ class ChatCubit extends Cubit<ChatStates> {
           .collection(receiverType)
           .doc(receiverId)
           .collection('Chats')
-          .doc(senderId)
-          .collection('Messages')
+          .doc(senderId)..set({
+        'typing':true
+      })..collection('Messages')
           .add(messageModel.toMap()!)
           .then((value) {
         emit(ChatSendMessageSuccessState());

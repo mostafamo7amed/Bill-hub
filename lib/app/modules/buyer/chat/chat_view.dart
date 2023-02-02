@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../shared/components/component.dart';
+import '../../../../styles/icons_broken.dart';
 import '../../../model/users.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
@@ -9,6 +10,7 @@ import '../../../resources/styles_manager.dart';
 import '../../chat_bloc/cubit.dart';
 import '../../chat_bloc/states.dart';
 import '../home/buyer_cubit/cubit.dart';
+import 'add_new_chat.dart';
 import 'chats_details_view.dart';
 
 class ChatBuyerView extends StatefulWidget {
@@ -23,7 +25,7 @@ class _ChatBuyerViewState extends State<ChatBuyerView> {
   @override
   void initState() {
     ChatCubit.getCubit(context)
-        .getAllUsers(userId: BuyerCubit.getCubit(context).buyerModel!.uid!);
+        .getChat(userType: 'Buyer', userId: BuyerCubit.getCubit(context).buyerModel!.uid!);
     super.initState();
   }
   @override
@@ -41,22 +43,51 @@ class _ChatBuyerViewState extends State<ChatBuyerView> {
               style: getSemiBoldStyle(color: ColorManager.white, fontSize: 20),
             ),
           ),
-          body: ConditionalBuilder(
-            condition: cubit.users.isNotEmpty,
-            builder: (context) =>ListView.separated(
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (context, index) =>
-                    buildChatItem(cubit.users[index],context),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 5,
+          body: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(color: ColorManager.primary,
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(4),bottomLeft:Radius.circular(4) )
                 ),
-                itemCount: cubit.users.length),
-            fallback: (context) => Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                backgroundColor: Colors.white,
+                child: InkWell(
+                  onTap: () {
+                    navigateTo(context, AddNewChat());
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text('أضافة محادثة',style: getSemiBoldStyle(color: ColorManager.white, fontSize: 16)),
+                        SizedBox(width: 4,),
+                        Icon(IconBroken.Add_User,color: ColorManager.white,),
+
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
+              Expanded(
+                child: ConditionalBuilder(
+                  condition: cubit.users.isNotEmpty,
+                  builder: (context) => ListView.separated(
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, index) =>
+                          buildChatItem(cubit.users[index],context),
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 5,
+                      ),
+                      itemCount: cubit.users.length),
+                  fallback: (context) => Center(
+                      child: Text(
+                        'لا توجد محادثات',
+                        style: getSemiBoldStyle(color: ColorManager.black, fontSize: 16),
+                      ),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },

@@ -72,7 +72,7 @@ class _InvoiceVendorViewState extends State<InvoiceVendorView> {
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return ViewInvoiceItemBuilder(
-                  cubit.allVendorInvoices[index], context);
+                  cubit.allVendorInvoices[index], context,index);
             },
             separatorBuilder: (context, index) => const SizedBox(
               height: 2,
@@ -84,12 +84,12 @@ class _InvoiceVendorViewState extends State<InvoiceVendorView> {
     );
   }
 
-  Widget ViewInvoiceItemBuilder(InvoiceItem invoiceItem, context) {
+  Widget ViewInvoiceItemBuilder(InvoiceItem invoiceItem, context,index) {
     return InkWell(
       onTap: () {
         navigateTo(
           context,
-          ViewInvoicePdf(invoiceItem.fileUrl!,false));
+          ViewInvoicePdf(invoiceItem.fileUrl!,false,'vendor',index,null));
       },
       child: Padding(
         padding: const EdgeInsets.only(

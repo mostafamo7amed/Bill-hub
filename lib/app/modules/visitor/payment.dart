@@ -1,18 +1,28 @@
+import 'package:bill_hub/app/modules/buyer/home/buyer_cubit/cubit.dart';
+import 'package:bill_hub/app/modules/vendor/invoice/invoice_cubit/cubit.dart';
+import 'package:bill_hub/app/modules/visitor/visitor_pay_view.dart';
+import 'package:bill_hub/shared/components/component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../shared/components/formatters.dart';
+import '../../model/invoice_item.dart';
 import '../../resources/color_manager.dart';
 import '../../resources/styles_manager.dart';
+import '../buyer/invoice/invoice_buyer_view.dart';
 
 class PaymentView extends StatelessWidget {
-  PaymentView({Key? key}) : super(key: key);
+  String userType;
+  int index;
+  InvoiceItem invoiceItem;
+  PaymentView(this.userType,this.index,this.invoiceItem,{Key? key}) : super(key: key);
   TextEditingController holderNameController = TextEditingController();
   TextEditingController cardNumberController = TextEditingController();
   TextEditingController expiryController = TextEditingController();
   TextEditingController cvvController = TextEditingController();
 
   bool isLoading = false;
+  var formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +33,7 @@ class PaymentView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
+            key: formKey,
             child: Builder(
               builder: (context) {
                 return Column(
@@ -36,6 +47,12 @@ class PaymentView extends StatelessWidget {
                         hint: "أسم حامل البطاق",
                         icon: Icons.account_circle_rounded,
                       ),
+                      validator: (value) {
+                        if(value!.isEmpty){
+                          return '';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     // Number
@@ -54,7 +71,10 @@ class PaymentView extends StatelessWidget {
                         CardNumberInputFormatter()
                       ],
                       validator: (String? number) {
-                        return '';
+                        if(number!.isEmpty){
+                          return '';
+                        }
+                        return null;
                       },
                     ),
                     const SizedBox(height: 10),
@@ -72,7 +92,10 @@ class PaymentView extends StatelessWidget {
                         CardMonthInputFormatter(),
                       ],
                       validator: (String? date) {
-                        return '';
+                        if(date!.isEmpty){
+                          return '';
+                        }
+                        return null;
 
                       },
                     ),
@@ -90,14 +113,31 @@ class PaymentView extends StatelessWidget {
                         LengthLimitingTextInputFormatter(4),
                       ],
                       validator: (String? cvv) {
-                        return '';
+                        if(cvv!.isEmpty){
+                          return '';
+                        }
+                        return null;
                       },
                     ),
                     const SizedBox(height: 30),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: (){},
+                        onPressed: (){
+                          if(formKey.currentState!.validate()){
+                            if(userType=='buyer'){
+                              print('====================$userType');
+                              BuyerCubit.getCubit(context).payInvoice(index: index);
+                              toast(message: 'تم دفع الفاتورة', data: ToastStates.success);
+                              navigateAndFinish(context, InvoiceBuyerView());
+                            }else{
+                              InvoiceCubit.getCubit(context).payInvoice(Item: invoiceItem);
+                              toast(message: 'تم دفع الفاتورة', data: ToastStates.success);
+                              navigateAndFinish(context, VisitorPayView());
+                            }
+
+                          }
+                        },
                         child: Text(
                           isLoading
                               ? 'Processing your request, please wait...'

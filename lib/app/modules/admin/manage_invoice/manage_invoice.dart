@@ -188,7 +188,7 @@ class _ManageAdminInvoiceState extends State<ManageAdminInvoice> {
   Widget BillItemBuilder(InvoiceItem invoiceItem,context) {
     return InkWell(
       onTap: () {
-        navigateTo(context, ViewInvoicePdf(invoiceItem.fileUrl!, false));
+        navigateTo(context, ViewInvoicePdf(invoiceItem.fileUrl!, false,'admin',0,null));
       },
       child: Padding(
         padding: const EdgeInsets.only(

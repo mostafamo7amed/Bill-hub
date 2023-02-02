@@ -4,15 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import '../../../../shared/components/component.dart';
+import '../../../model/invoice_item.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/styles_manager.dart';
+import '../../buyer/home/buyer_cubit/cubit.dart';
+import '../../buyer/invoice/invoice_buyer_view.dart';
 import '../../visitor/payment.dart';
+import '../../visitor/visitor_pay_view.dart';
 
 class ViewInvoicePdf extends StatelessWidget {
   String url;
   bool paid;
-  ViewInvoicePdf(this.url,this.paid,{Key? key}) : super(key: key);
+  String userType;
+  int index;
+  InvoiceItem? invoiceItem;
+  ViewInvoicePdf(this.url,this.paid,this.userType,this.index,this.invoiceItem,{Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +53,7 @@ class ViewInvoicePdf extends StatelessWidget {
                     backgroundColor:
                     MaterialStatePropertyAll(ColorManager.primary)),
                 onPressed: () {
-                  showPaymentDialog(context);
+                  showPaymentDialog(context,userType);
                 },
                 child: Text(
                   "دفع الفاتورة",
@@ -59,7 +66,7 @@ class ViewInvoicePdf extends StatelessWidget {
       },
     );
   }
-  Future showPaymentDialog(context) => showDialog(
+  Future showPaymentDialog(context,userType) => showDialog(
     context: context,
     builder: (context) {
       return Dialog(
@@ -80,7 +87,9 @@ class ViewInvoicePdf extends StatelessWidget {
                       color: ColorManager.darkGray, fontSize: 18),
                 ),
                 InkWell(
-                  onTap: () => navigateTo(context, PaymentView()),
+                  onTap: () => userType=='visitor'?
+                  navigateTo(context, PaymentView(userType,index,invoiceItem!)):
+                  navigateTo(context, PaymentView(userType,index,InvoiceItem('', '', '', '', '', '', '', '', false))),
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Container(
@@ -100,7 +109,9 @@ class ViewInvoicePdf extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () =>  navigateTo(context, PaymentView()),
+                  onTap: () =>  userType=='visitor'?
+                  navigateTo(context, PaymentView(userType,index,invoiceItem!)):
+                  navigateTo(context, PaymentView(userType,index,InvoiceItem('', '', '', '', '', '', '', '', false))),
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Container(
@@ -120,7 +131,9 @@ class ViewInvoicePdf extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () =>  navigateTo(context, PaymentView()),
+                  onTap: () =>  userType=='visitor'?
+                  navigateTo(context, PaymentView(userType,index,invoiceItem!)):
+                  navigateTo(context, PaymentView(userType,index,InvoiceItem('', '', '', '', '', '', '', '', false))),
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Container(
@@ -140,7 +153,18 @@ class ViewInvoicePdf extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    if(userType=='buyer'){
+                      print('====================$userType');
+                      BuyerCubit.getCubit(context).payInvoice(index: index);
+                      toast(message: 'تم دفع الفاتورة', data: ToastStates.success);
+                      navigateAndFinish(context, InvoiceBuyerView());
+                    }else{
+                      InvoiceCubit.getCubit(context).payInvoice(Item: invoiceItem!);
+                      toast(message: 'تم دفع الفاتورة', data: ToastStates.success);
+                      navigateAndFinish(context, VisitorPayView());
+                    }
+                  },
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Container(

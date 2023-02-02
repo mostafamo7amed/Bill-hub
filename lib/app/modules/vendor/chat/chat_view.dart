@@ -23,7 +23,7 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     ChatCubit.getCubit(context)
-        .getAllUsers(userId: InvoiceCubit.getCubit(context).vendorModel!.uid!);
+        .getChat(userType: 'Vendor',userId: InvoiceCubit.getCubit(context).vendorModel!.uid!);
     super.initState();
   }
 
@@ -50,12 +50,11 @@ class _ChatViewState extends State<ChatView> {
                       height: 5,
                     ),
                 itemCount: cubit.users.length),
-            fallback: (context) => Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                backgroundColor: Colors.white,
-              ),
-            ),
+            fallback: (context) =>Center(
+                child: Text(
+                  'لا توجد محادثات',
+                  style: getSemiBoldStyle(color: ColorManager.black, fontSize: 16),
+                )),
           ),
         );
       },

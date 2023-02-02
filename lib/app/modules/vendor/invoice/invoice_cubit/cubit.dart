@@ -460,6 +460,31 @@ class InvoiceCubit extends Cubit<InvoiceStates> {
     emit(ChangeSearchListState());
     return x;
   }
+  void payInvoice({
+    required InvoiceItem Item
+
+  }){
+    emit(PayInvoiceLoadingState());
+    InvoiceItem invoiceItem = InvoiceItem(
+        Item.invoiceNumber,
+        Item.invoiceId,
+        Item.creationDate,
+        Item.endDate,
+        Item.vendorId,
+        Item.fileUrl,
+        Item.buyerName,
+        Item.buyerPhone,
+        true);
+    FirebaseFirestore.instance
+        .collection('All Invoices')
+        .doc(Item.invoiceId)
+        .set(invoiceItem.toMap()!)
+        .then((value) {
+      emit(PayInvoiceSuccessState());
+    }).catchError((e) {
+      emit(PayInvoiceErrorState());
+    });
+  }
 
   String generateRandomString(int len) {
     var r = Random();

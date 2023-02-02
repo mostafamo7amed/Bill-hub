@@ -69,7 +69,7 @@ class VisitorPayView extends StatelessWidget {
                               if(formKey.currentState!.validate()){
                                 InvoiceItem? value = cubit.search(billController.text);
                                 if(value!=null){
-                                  navigateTo(context, ViewInvoicePdf(value.fileUrl!,true));
+                                  navigateTo(context, ViewInvoicePdf(value.fileUrl!,true,'visitor',0,value));
                                 }else{
                                   toast(message: 'لا توجد فاتورة بهذا الرقم', data: ToastStates.warning);
                                 }

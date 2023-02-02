@@ -13,3 +13,6 @@ class ChatGetAllUsersLoadingState extends ChatStates{}
 class ChatGetAllVendorsSuccessState extends ChatStates{}
 class ChatGetAllBuyerSuccessState extends ChatStates{}
 class ChatGetAllUsersErrorState extends ChatStates{}
+
+class ChatGetAllVendorChatSuccessState extends ChatStates{}
+class ChatGetAllVendorChatErrorState extends ChatStates{}

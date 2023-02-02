@@ -109,6 +109,30 @@ class BuyerCubit extends Cubit<BuyerStates> {
     emit(ChangeSearchListState());
   }
 
+  void payInvoice({
+  required int index,
+}){
+    emit(PayInvoiceLoadingState());
+    InvoiceItem invoiceItem = InvoiceItem(
+        allBuyerInvoices[index].invoiceNumber,
+        allBuyerInvoices[index].invoiceId,
+        allBuyerInvoices[index].creationDate,
+        allBuyerInvoices[index].endDate,
+        allBuyerInvoices[index].vendorId,
+        allBuyerInvoices[index].fileUrl,
+        allBuyerInvoices[index].buyerName,
+        allBuyerInvoices[index].buyerPhone,
+        true);
+    FirebaseFirestore.instance
+        .collection('All Invoices')
+        .doc(allBuyerInvoices[index].invoiceId)
+        .set(invoiceItem.toMap()!)
+        .then((value) {
+      emit(PayInvoiceSuccessState());
+    }).catchError((e) {
+      emit(PayInvoiceErrorState());
+    });
+}
 
 
   String generateRandomString(int len) {

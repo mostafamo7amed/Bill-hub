@@ -30,16 +30,17 @@ Widget buildHeader(Invoice invoice) => Column(
           children: [
             buildInvoiceInfo(invoice),
             Spacer(),
-            Expanded(child: buildCustomerAddress(invoice.buyer!),)
-
+            Expanded(
+              child: buildCustomerAddress(invoice.buyer!),
+            )
           ],
         ),
       ],
     );
 
 Widget buildSupplierAddress(Vendor supplier) => Column(
-  crossAxisAlignment: CrossAxisAlignment.end,
-  children: [
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
         Text(
           'البائع :',
         ),
@@ -52,7 +53,11 @@ Widget buildSupplierAddress(Vendor supplier) => Column(
     );
 
 Widget buildInvoiceInfo(Invoice info) {
-  final titles = <String>['رقم الفاتورة : ', 'تاريخ الانشاء : ', 'تاريخ الانتهاء : '];
+  final titles = <String>[
+    'رقم الفاتورة : ',
+    'تاريخ الانشاء : ',
+    'تاريخ الانتهاء : '
+  ];
   final data = <String>[
     info.invoiceId!,
     info.creationDate!,
@@ -71,7 +76,7 @@ Widget buildInvoiceInfo(Invoice info) {
 }
 
 Widget buildCustomerAddress(Buyer buyer) => Column(
-  crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
           'المشتري :',
@@ -84,7 +89,6 @@ Widget buildCustomerAddress(Buyer buyer) => Column(
         ),
       ],
     );
-
 
 Widget buildTitle() =>
     Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -104,9 +108,9 @@ Widget buildInvoiceProduct(Invoice invoice) {
   final data = invoice.product!.map((item) {
     final total = item.price! * item.amount!.toDouble();
     return [
-      '${total.toStringAsFixed(1)} \$',
+      '${total.toStringAsFixed(1)} ريال',
       '${item.amount}',
-      '${item.price} \$',
+      '${item.price} ريال',
       item.name,
     ];
   }).toList();
@@ -135,15 +139,24 @@ Widget buildTotal(double total) {
           flex: 4,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Container(
+                    child: Row(children: [
+                      Text('15 %',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Expanded(
+                          child: Text(
+                            'الضريبة',
+                          )),
+                    ])),
             Container(
                 child: Row(children: [
-              Text('$total \$',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text('${total+(total*0.15)} ريال',),
               Expanded(
                   child: Text(
                 'الاجمالي',
               )),
             ])),
+
             Divider(),
           ]),
         ),
@@ -178,10 +191,15 @@ buildText({
   return Container(
     width: width,
     child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Text(value,),
-        Expanded(child: Text(title,)),
+        Text(
+          value,
+        ),
+        Expanded(
+            child: Text(
+          title,
+        )),
       ],
     ),
   );
